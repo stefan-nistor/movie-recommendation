@@ -49,4 +49,12 @@ public class Email {
     public void setMailName(String mailName) {
         this.mailName = mailName;
     }
+
+    @Override
+    public String toString() {
+        return "Email{" +
+                "mailDomain='" + mailDomain + '\'' +
+                ", mailName='" + mailName + '\'' +
+                '}';
+    }
 }
