@@ -2,19 +2,17 @@ package ro.info.uaic.movierecommendation.entites;
 
 import lombok.*;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Data
-@Builder
-@Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Entity
 @Table(name = "users")
 public class UserEntity {
 
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
