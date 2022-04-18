@@ -14,5 +14,5 @@ public class Photo {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID idPhoto;
-    byte[] imageAsByteArray;
+    private byte[] imageAsByteArray;
 }
