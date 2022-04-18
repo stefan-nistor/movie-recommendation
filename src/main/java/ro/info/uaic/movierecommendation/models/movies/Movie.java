@@ -1,13 +1,17 @@
 package ro.info.uaic.movierecommendation.models.movies;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+@Getter
+@Setter
 @Entity
-
+@Table(name = "movies")
 public class Movie {
 
     @Id
@@ -26,69 +30,7 @@ public class Movie {
     private String duration;
     private String director;
     private String writer;
-
-
-
     private boolean hasCaptions;
     private Date releaseDate;
 
-    public UUID getIdMovie() {
-        return idMovie;
-    }
-
-    public void setIdMovie(UUID idMovie) {
-        this.idMovie = idMovie;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public MovieType getType() {
-        return type;
-    }
-
-    public void setType(MovieType type) {
-        this.type = type;
-    }
-
-    public Date getReleaseDate() {
-        return releaseDate;
-    }
-
-    public void setReleaseDate(Date releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public List<Actor> getActors() {
-        return actors;
-    }
-
-    public boolean isHasCaptions() {
-        return hasCaptions;
-    }
-
-    public List<Photo> getPhotos() {
-        return photos;
-    }
-
-    public String getDuration() {
-        return duration;
-    }
-
-    public String getDirector() {
-        return director;
-    }
-
-    public String getWriter() {
-        return writer;
-    }
 }
