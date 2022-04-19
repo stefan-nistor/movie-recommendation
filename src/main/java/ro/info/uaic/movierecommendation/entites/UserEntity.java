@@ -23,5 +23,9 @@ public class UserEntity {
     // TODO be sure to store encrypted password
     String password;
 
-
+    public UserEntity(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
 }

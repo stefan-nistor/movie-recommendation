@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ro.info.uaic.movierecommendation.dtoresponses.UserDTO;
-import ro.info.uaic.movierecommendation.entites.UserEntity;
+import ro.info.uaic.movierecommendation.hashing.Hashing;
 import ro.info.uaic.movierecommendation.services.UserService;
 
 @RestController
@@ -23,7 +23,7 @@ public class UserController {
 
     @PostMapping
     ResponseEntity<?> createNewUser(@RequestBody UserDTO userDTO) {
-        userDTO.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
+        userDTO.setPassword(Hashing.doHashing(userDTO.getPassword()));
         userService.saveNewUser(userDTO);
         return ResponseEntity.ok().build();
     }
