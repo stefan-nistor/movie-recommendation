@@ -22,8 +22,7 @@ public class MovieService {
     private MovieRepository repositoryMovie;
 
     @Autowired
-    private ActorRepository repositoryActor;
-
+    private ActorService serviceActor;
 
     public List<MovieDto> findAll() {
 
@@ -54,7 +53,7 @@ public class MovieService {
 
     public List<MovieDto> findByActor(String actorName) {
 
-        List<MovieDto> movieDtoList = repositoryMovie.findByActors(repositoryActor.findByName(actorName))
+        List<MovieDto> movieDtoList = repositoryMovie.findByActors(serviceActor.findByName(actorName))
                 .stream()
                 .map(user -> modelMapper.map(user, MovieDto.class))
                 .collect(Collectors.toList());

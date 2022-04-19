@@ -14,5 +14,5 @@ public interface MovieRepository extends JpaRepository<Movie, UUID> {
 
     Optional<Movie> findByName(String name);
     Optional<Movie> findByType(MovieType type);
-    Optional<Movie> findByActors(Optional<Actor> actor);
+    Optional<Movie> findByActors(Actor actor);
 }
