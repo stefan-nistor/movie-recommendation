@@ -1,4 +1,4 @@
-package ro.info.uaic.movierecommendation.hashing;
+package ro.info.uaic.movierecommendation.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

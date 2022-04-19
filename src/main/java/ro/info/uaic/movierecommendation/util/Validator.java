@@ -1,4 +1,4 @@
-package ro.info.uaic.movierecommendation.validation;
+package ro.info.uaic.movierecommendation.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
