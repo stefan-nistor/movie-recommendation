@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ro.info.uaic.movierecommendation.dtoresponses.UserDTO;
 import ro.info.uaic.movierecommendation.hashing.Hashing;
 import ro.info.uaic.movierecommendation.services.UserService;
+import ro.info.uaic.movierecommendation.validation.EmailFormatException;
+import ro.info.uaic.movierecommendation.validation.Validator;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -22,8 +24,11 @@ public class UserController {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @PostMapping
-    ResponseEntity<?> createNewUser(@RequestBody UserDTO userDTO) {
+    ResponseEntity<?> createNewUser(@RequestBody UserDTO userDTO) throws EmailFormatException {
         userDTO.setPassword(Hashing.doHashing(userDTO.getPassword()));
+
+        if(!Validator.validateEmailAddress(userDTO.getEmail()))
+            throw new EmailFormatException();
         userService.saveNewUser(userDTO);
         return ResponseEntity.ok().build();
     }
