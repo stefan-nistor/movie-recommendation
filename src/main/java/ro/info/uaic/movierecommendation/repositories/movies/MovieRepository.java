@@ -1,7 +1,6 @@
 package ro.info.uaic.movierecommendation.repositories.movies;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ro.info.uaic.movierecommendation.models.movies.Actor;
 import ro.info.uaic.movierecommendation.models.movies.Movie;

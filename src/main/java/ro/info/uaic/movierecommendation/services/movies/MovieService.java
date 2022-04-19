@@ -34,22 +34,32 @@ public class MovieService {
         return movieDtoList;
     }
 
-    public MovieDto findByName(String name) {
+    public List<MovieDto> findByName(String name) {
 
-        MovieDto movieResponse = modelMapper.map(repositoryMovie.findByName(name), MovieDto.class);
-        return movieResponse;
+        List<MovieDto> movieDtoList = repositoryMovie.findByName(name)
+                .stream()
+                .map(user -> modelMapper.map(user, MovieDto.class))
+                .collect(Collectors.toList());
+        return movieDtoList;
     }
 
-    public MovieDto findByType(MovieType type) {
+    public List<MovieDto> findByType(MovieType type) {
 
-        MovieDto movieResponse = modelMapper.map(repositoryMovie.findByType(type), MovieDto.class);
-        return movieResponse;
+        List<MovieDto> movieDtoList = repositoryMovie.findByType(type)
+                .stream()
+                .map(user -> modelMapper.map(user, MovieDto.class))
+                .collect(Collectors.toList());
+        return movieDtoList;
     }
 
-    public MovieDto findByActor(String actorName) {
+    public List<MovieDto> findByActor(String actorName) {
 
-        MovieDto movieResponse = modelMapper.map(repositoryMovie.findByActors(repositoryActor.findByName(actorName)), MovieDto.class);
-        return movieResponse;
+        List<MovieDto> movieDtoList = repositoryMovie.findByActors(repositoryActor.findByName(actorName))
+                .stream()
+                .map(user -> modelMapper.map(user, MovieDto.class))
+                .collect(Collectors.toList());
+        return movieDtoList;
+
     }
 
 
