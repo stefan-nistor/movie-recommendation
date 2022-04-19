@@ -9,10 +9,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface MovieListRepository extends JpaRepository<MovieList,UUID> {
+public interface MovieListRepository extends JpaRepository<MovieList, UUID> {
 
     Optional<MovieList> findByName(String name);
-    Optional<Boolean>   addMovieToList(Movie movie,MovieList movieList);
-    Optional<Boolean>   removeMovieFromList(Movie movie,MovieList movieList);
+
+    Optional<Movie> addMovieToList(Movie movie, MovieList movieList);
+
+    Optional<Movie> removeMovieFromList(Movie movie, MovieList movieList);
 
 }
