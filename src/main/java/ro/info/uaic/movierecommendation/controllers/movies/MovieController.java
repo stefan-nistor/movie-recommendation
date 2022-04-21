@@ -3,13 +3,13 @@ package ro.info.uaic.movierecommendation.controllers.movies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ro.info.uaic.movierecommendation.dtoresponses.movies.MovieDto;
 import ro.info.uaic.movierecommendation.models.movies.MovieType;
 import ro.info.uaic.movierecommendation.services.movies.MovieService;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 @RestController
@@ -43,7 +43,7 @@ public class MovieController {
 
 
     @GetMapping("/filter")
-    public ResponseEntity<List<MovieDto>> getThings(@RequestParam Map<String, String> requestParams) {
+    public ResponseEntity<List<MovieDto>> getMoviesByFilter(@RequestParam Map<String, String> requestParams) {
 
         String movieName = requestParams.get("movie");
         String typeMovie = requestParams.get("type");

@@ -13,7 +13,7 @@ import java.util.UUID;
 public class Actor {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID idActor;
+    private UUID id;
     private String name;
     private int numberOfAwards;
 

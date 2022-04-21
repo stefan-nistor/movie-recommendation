@@ -8,5 +8,5 @@ import java.util.UUID;
 
 public interface ActorRepository extends JpaRepository<Actor, UUID> {
 
-    Actor findByName(String actorName);
+    Optional<Actor> findByName(String actorName);
 }
