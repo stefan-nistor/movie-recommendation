@@ -13,6 +13,7 @@ import java.util.UUID;
 public class Photo {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", nullable = false)
     private UUID id;
     private byte[] imageAsByteArray;
 }

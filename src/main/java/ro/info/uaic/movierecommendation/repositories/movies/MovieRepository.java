@@ -6,7 +6,10 @@ import ro.info.uaic.movierecommendation.dtoresponses.movies.ActorDto;
 import ro.info.uaic.movierecommendation.models.movies.Actor;
 import ro.info.uaic.movierecommendation.models.movies.Movie;
 import ro.info.uaic.movierecommendation.models.movies.MovieType;
+import ro.info.uaic.movierecommendation.models.movies.Type;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -14,6 +17,6 @@ import java.util.UUID;
 public interface MovieRepository extends JpaRepository<Movie, UUID> {
 
     Optional<Movie> findByName(String name);
-    Optional<Movie> findByType(MovieType type);
-    Optional<Movie> findByActors(ActorDto actor);
+    Optional<Movie> findByTypeIn(List<MovieType> type);
+    Optional<Movie> findByActorsIn(List<Actor> actor);
 }

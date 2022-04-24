@@ -1,8 +1,9 @@
 package ro.info.uaic.movierecommendation.models.movies;
 
-public enum MovieType {
+public enum Type {
     ACTION,
     COMEDY,
     ROMANCE,
+    DRAMA,
     HORROR;
 }

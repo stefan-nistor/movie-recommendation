@@ -1,12 +1,10 @@
 package ro.info.uaic.movierecommendation.controllers.movies;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ro.info.uaic.movierecommendation.dtoresponses.movies.MovieDto;
-import ro.info.uaic.movierecommendation.models.movies.MovieType;
+import ro.info.uaic.movierecommendation.models.movies.Type;
 import ro.info.uaic.movierecommendation.services.movies.MovieService;
 
 import java.util.List;
@@ -31,14 +29,14 @@ public class MovieController {
     }
 
     @GetMapping("/searchT")
-    public ResponseEntity<List<MovieDto>> getMovieByType(@RequestParam("type") MovieType type) {
+    public ResponseEntity<List<MovieDto>> getMovieByType(@RequestParam("type") List<Type> valuesType) {
 
-        return ResponseEntity.ok().body(service.findByType(type));
+        return ResponseEntity.ok().body(service.findByType(valuesType));
     }
 
     @GetMapping("/searchA")
-    public ResponseEntity<List<MovieDto>> getMovieByActor(@RequestParam("actor") String name) {
-        return ResponseEntity.ok().body(service.findByActor(name));
+    public ResponseEntity<List<MovieDto>> getMovieByActor(@RequestParam("actor") List<String> valuesName) {
+        return ResponseEntity.ok().body(service.findByActor(valuesName));
     }
 
 
