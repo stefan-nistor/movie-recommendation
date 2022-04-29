@@ -1,9 +1,11 @@
 package ro.info.uaic.movierecommendation.controllers.movies;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.info.uaic.movierecommendation.dtoresponses.movies.MovieDto;
+import ro.info.uaic.movierecommendation.exceptions.MovieNotFoundException;
 import ro.info.uaic.movierecommendation.models.movies.Type;
 import ro.info.uaic.movierecommendation.services.movies.MovieService;
 
@@ -24,19 +26,24 @@ public class MovieController {
     }
 
     @GetMapping("/searchN")
-    public ResponseEntity<List<MovieDto>> getMovieByName(@RequestParam("name") String name) {
-        return ResponseEntity.ok().body(service.findByName(name));
+    public ResponseEntity<List<MovieDto>> getMovieByName(@RequestParam("name") String name) throws MovieNotFoundException {
+
+        return new ResponseEntity(service.findByName(name), HttpStatus.OK);
+
     }
 
     @GetMapping("/searchT")
-    public ResponseEntity<List<MovieDto>> getMovieByType(@RequestParam("type") List<Type> valuesType) {
+    public ResponseEntity<List<MovieDto>> getMovieByType(@RequestParam("type") List<Type> valuesType) throws MovieNotFoundException {
 
-        return ResponseEntity.ok().body(service.findByType(valuesType));
+        return new ResponseEntity(service.findByType(valuesType), HttpStatus.OK);
+
     }
 
     @GetMapping("/searchA")
-    public ResponseEntity<List<MovieDto>> getMovieByActor(@RequestParam("actor") List<String> valuesName) {
-        return ResponseEntity.ok().body(service.findByActor(valuesName));
+    public ResponseEntity<List<MovieDto>> getMovieByActor(@RequestParam("actor") List<String> valuesName) throws MovieNotFoundException {
+
+        return new ResponseEntity(service.findByActor(valuesName), HttpStatus.OK);
+
     }
 
 

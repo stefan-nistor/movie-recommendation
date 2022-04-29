@@ -4,7 +4,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ro.info.uaic.movierecommendation.dtoresponses.movies.MovieDto;
-import ro.info.uaic.movierecommendation.models.movies.MovieType;
+import ro.info.uaic.movierecommendation.exceptions.MovieNotFoundException;
+import ro.info.uaic.movierecommendation.models.movies.Movie;
 import ro.info.uaic.movierecommendation.models.movies.Type;
 import ro.info.uaic.movierecommendation.repositories.movies.ActorRepository;
 import ro.info.uaic.movierecommendation.repositories.movies.MovieRepository;
@@ -38,12 +39,15 @@ public class MovieService {
         return movieDtoList;
     }
 
-    public List<MovieDto> findByName(String name) {
+    public List<MovieDto> findByName(String name) throws MovieNotFoundException {
 
         List<MovieDto> movieDtoList = repositoryMovie.findByName(name)
                 .stream()
                 .map(user -> modelMapper.map(user, MovieDto.class))
                 .collect(Collectors.toList());
+        if(movieDtoList.isEmpty()){
+            throw new MovieNotFoundException(Movie.class, "name", name);
+        }
         return movieDtoList;
     }
 
@@ -53,15 +57,21 @@ public class MovieService {
                 .stream()
                 .map(user -> modelMapper.map(user, MovieDto.class))
                 .collect(Collectors.toList());
+        if(movieDtoList.isEmpty()){
+            throw new MovieNotFoundException(Movie.class, "actor/actors", type.toString());
+        }
         return movieDtoList;
     }
 
-    public List<MovieDto> findByActor(List<String> actorName) {
+    public List<MovieDto> findByActor(List<String> actorName) throws MovieNotFoundException {
 
         List<MovieDto> movieDtoList = repositoryMovie.findByActorsIn(repositoryActor.findByNameIn(actorName))
                 .stream()
                 .map(user -> modelMapper.map(user, MovieDto.class))
                 .collect(Collectors.toList());
+        if(movieDtoList.isEmpty()){
+            throw new MovieNotFoundException(Movie.class, "actor/actors", actorName.toString());
+        }
         return movieDtoList;
 
     }

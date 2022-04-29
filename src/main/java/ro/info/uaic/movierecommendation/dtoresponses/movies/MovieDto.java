@@ -3,7 +3,7 @@ package ro.info.uaic.movierecommendation.dtoresponses.movies;
 import com.sun.istack.NotNull;
 import lombok.Data;
 import ro.info.uaic.movierecommendation.models.movies.Actor;
-import ro.info.uaic.movierecommendation.models.movies.MovieType;
+import ro.info.uaic.movierecommendation.models.movies.Type;
 import ro.info.uaic.movierecommendation.models.movies.Photo;
 
 import java.util.Date;
@@ -11,7 +11,6 @@ import java.util.List;
 
 
 @Data
-
 public class MovieDto {
 
     @NotNull
@@ -20,7 +19,7 @@ public class MovieDto {
     private String description;
     private List<Actor> actors;
     @NotNull
-    private MovieType type;
+    private Type type;
     @NotNull
     private String duration;
     private String director;
