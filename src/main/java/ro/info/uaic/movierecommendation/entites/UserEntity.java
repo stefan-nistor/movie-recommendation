@@ -15,17 +15,10 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-
     String username;
-
     String email;
-
-    // TODO be sure to store encrypted password
     String password;
+    String firstname;
+    String lastname;
 
-    public UserEntity(String username, String email, String password) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-    }
 }

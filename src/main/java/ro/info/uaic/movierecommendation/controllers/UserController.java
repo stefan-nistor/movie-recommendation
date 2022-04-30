@@ -19,17 +19,10 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-
     @PostMapping
     ResponseEntity<?> createNewUser(@RequestBody UserDTO userDTO) throws EmailFormatException {
         userDTO.setPassword(Hashing.doHashing(userDTO.getPassword()));
         userService.saveNewUser(userDTO);
         return ResponseEntity.ok().build();
     }
-
-
-
-
 }
