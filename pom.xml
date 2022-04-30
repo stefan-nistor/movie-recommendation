@@ -14,7 +14,7 @@
 	<name>movie-recommendation</name>
 	<description>2A6 group project of SE course </description>
 	<properties>
-		<java.version>18.0.1</java.version>
+		<java.version>17</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -84,8 +84,8 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>18.0.1</source>
-					<target>18.0.1</target>
+					<source>17</source>
+					<target>17</target>
 				</configuration>
 			</plugin>
 		</plugins>
