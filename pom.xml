@@ -14,7 +14,7 @@
 	<name>movie-recommendation</name>
 	<description>2A6 group project of SE course </description>
 	<properties>
-		<java.version>18</java.version>
+<!--		<java.version>18</java.version>-->
 	</properties>
 	<dependencies>
 		<dependency>
