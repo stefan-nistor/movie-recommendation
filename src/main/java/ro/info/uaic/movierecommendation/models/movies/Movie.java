@@ -19,7 +19,7 @@ public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
-    private UUID id;
+    private Long id;
     private String name;
     private String description;
     @ManyToMany(fetch = FetchType.LAZY)
