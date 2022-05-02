@@ -13,8 +13,8 @@ public interface MovieListRepository extends JpaRepository<MovieList, UUID> {
 
     Optional<MovieList> findByName(String name);
 
-    Optional<Movie> addMovieToList(Movie movie, MovieList movieList);
+    Optional<MovieList> addMovieToList(Movie movie,UUID idMovieList);
 
-    Optional<Movie> removeMovieFromList(Movie movie, MovieList movieList);
+    Optional<MovieList> removeMovieFromList(Movie movie, UUID idMovieList);
 
 }
