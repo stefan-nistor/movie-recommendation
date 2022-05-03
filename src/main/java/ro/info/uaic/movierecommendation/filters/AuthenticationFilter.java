@@ -3,12 +3,12 @@ package ro.info.uaic.movierecommendation.filters;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -23,14 +23,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     public static final String SECRET = "SECRET_KEY";
     public static final long EXPIRATION_TIME = 900_000; // 15 mins
-    public static final String TOKEN_PREFIX = "Bearer ";
-    public static final String HEADER_STRING = "Authorization";
-    public static final String SIGN_UP_URL = "/api/services/controller/user";
 
     @Autowired
     public AuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
-        setFilterProcessesUrl("/api/services/controller/user/login"); // Ca sa nu faca /login endpoint by default
+        setFilterProcessesUrl("/api/v1/login"); // Ca sa nu faca /login endpoint by default
     }
 
     /**
@@ -54,10 +51,14 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .withSubject(((User) auth.getPrincipal()).getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .sign(Algorithm.HMAC512(SECRET.getBytes()));
+        token = "Bearer " + token;
 
-        String body = ((User) auth.getPrincipal()).getUsername() + " " + token;
-
-        response.getWriter().write(body);
-        response.getWriter().flush();
+        response.addHeader("Authorization", token);
+        response.setHeader("Authorization", token);
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        response.setHeader("Access-Control-Max-Age", "3600");
+        response.setHeader("Access-Control-Allow-Headers", "X-PINGOTHER,Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization");
+        response.addHeader("Access-Control-Expose-Headers", "Authorization");
     }
 }
