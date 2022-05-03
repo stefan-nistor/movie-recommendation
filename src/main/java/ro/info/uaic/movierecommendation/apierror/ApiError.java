@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonTypeIdResolver;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
-
 import java.time.LocalDateTime;
 
 @Data
@@ -28,17 +27,19 @@ public class ApiError {
             this.status = status;
         }
 
-        ApiError(HttpStatus status, Throwable ex) {
+        public ApiError(HttpStatus status, Throwable ex) {
             this();
             this.status = status;
             this.message = "Unexpected error";
             this.debugMessage = ex.getLocalizedMessage();
         }
 
-        ApiError(HttpStatus status, String message, Throwable ex) {
+        public ApiError(HttpStatus status, String message, Throwable ex) {
             this();
             this.status = status;
             this.message = message;
             this.debugMessage = ex.getLocalizedMessage();
         }
+
+
 }

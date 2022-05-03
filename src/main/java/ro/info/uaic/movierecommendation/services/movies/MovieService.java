@@ -64,7 +64,7 @@ public class MovieService {
                 .map(user -> modelMapper.map(user, MovieDto.class))
                 .collect(Collectors.toList());
         if(movieDtoList.isEmpty()){
-            throw new MovieNotFoundException(Movie.class, "actor/actors", type.toString());
+            throw new MovieNotFoundException(Movie.class, "type/types", type.toString());
         }
         return movieDtoList;
     }
