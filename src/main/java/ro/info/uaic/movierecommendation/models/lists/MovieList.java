@@ -15,7 +15,7 @@ import java.util.UUID;
 public class MovieList {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    private long id;
     private String name;
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "movielist_movie", joinColumns = @JoinColumn(name = "id_list"), inverseJoinColumns = @JoinColumn(name = "id_movie"))

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.modelmapper.ModelMapper;
 import ro.info.uaic.movierecommendation.dtoresponses.lists.MovieListDTO;
+import ro.info.uaic.movierecommendation.models.movies.Movie;
 import ro.info.uaic.movierecommendation.reposirories.lists.MovieListRepository;
 
 import java.util.*;
@@ -30,5 +31,19 @@ public class MovieListService {
         return movieListDTO;
     }
 
+    public MovieListDTO findByID(long movieListID) {
+        MovieListDTO movieListDTO = modelMapper.map(repositoryList.findByID(movieListID), MovieListDTO.class);
+        return movieListDTO;
+    }
+
+    public MovieListDTO addMovieToList(Movie movie, long movieListID) {
+        repositoryList.addMovieToList(movie, movieListID);
+        return findByID(movieListID);
+    }
+
+    public MovieListDTO removeMovieToList(Movie movie, long movieListID) {
+        repositoryList.removeMovieFromList(movie, movieListID);
+        return findByID(movieListID);
+    }
 
 }
