@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -13,7 +12,8 @@ import java.util.UUID;
 public class Actor {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID idActor;
+    @Column(name = "id", nullable = false)
+    private Long id;
     private String name;
     private int numberOfAwards;
 

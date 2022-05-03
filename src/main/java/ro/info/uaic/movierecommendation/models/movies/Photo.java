@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -13,6 +12,7 @@ import java.util.UUID;
 public class Photo {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID idPhoto;
+    @Column(name = "id", nullable = false)
+    private Long id;
     private byte[] imageAsByteArray;
 }
