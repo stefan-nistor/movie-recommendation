@@ -2,11 +2,15 @@ package ro.info.uaic.movierecommendation.models.movies;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
+@ToString
 
 @Getter
 @Setter
@@ -16,7 +20,8 @@ public class Movie {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID idMovie;
+    @Column(name = "id", nullable = false)
+    private Long id;
     private String name;
     private String description;
     @ManyToMany(fetch = FetchType.LAZY)
@@ -25,8 +30,9 @@ public class Movie {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "movie_photos", joinColumns = @JoinColumn(name = "id_movie"), inverseJoinColumns = @JoinColumn(name = "id_photo"))
     private List<Photo> photos;
-    @Enumerated(EnumType.STRING)
-    private MovieType type;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "movie_types", joinColumns = @JoinColumn(name = "id_movie"), inverseJoinColumns = @JoinColumn(name = "id_type"))
+    private List<MovieType> type;
     private String duration;
     private String director;
     private String writer;
