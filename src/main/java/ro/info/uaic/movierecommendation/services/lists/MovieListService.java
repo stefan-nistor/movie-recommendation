@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.modelmapper.ModelMapper;
 import ro.info.uaic.movierecommendation.dtoresponses.lists.MovieListDTO;
+import ro.info.uaic.movierecommendation.models.lists.MovieList;
 import ro.info.uaic.movierecommendation.models.movies.Movie;
 import ro.info.uaic.movierecommendation.reposirories.lists.MovieListRepository;
 
@@ -15,6 +16,9 @@ public class MovieListService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private MovieRepository repositoryMovie;
 
     @Autowired
     private MovieListRepository repositoryList;
@@ -36,14 +40,20 @@ public class MovieListService {
         return movieListDTO;
     }
 
-    public MovieListDTO addMovieToList(Movie movie, long movieListID) {
-        repositoryList.addMovieToList(movie, movieListID);
-        return findByID(movieListID);
+    public MovieListDTO addMovieToList(MovieDto movie, MovieListDTO movieListDTO) {
+        long movieListID = modelMapper.map(repositoryList.findByName(movieListDTO.getName()), MovieList.class).getId();
+        long movieID = modelMapper.map(repositoryMovie.findByName(movie.getName()), Movie.class).getId();
+        repositoryList.addMovieToList(movieListID, movieID);
+        MovieListDTO movieListDTOResult = modelMapper.map(repositoryList.findByID(movieListID), MovieListDTO.class);
+        return movieListDTOResult;
     }
 
-    public MovieListDTO removeMovieToList(Movie movie, long movieListID) {
-        repositoryList.removeMovieFromList(movie, movieListID);
-        return findByID(movieListID);
+    public MovieListDTO removeMovieToList(MovieDto movie, MovieListDTO movieListDTO) {
+        long movieListID = modelMapper.map(repositoryList.findByName(movieListDTO.getName()), MovieList.class).getId();
+        long movieID = modelMapper.map(repositoryMovie.findByName(movie.getName()), Movie.class).getId();
+        repositoryList.removeMovieFromList(movieListID, movieID);
+        MovieListDTO movieListDTOResult = modelMapper.map(repositoryList.findByID(movieListID), MovieListDTO.class);
+        return movieListDTOResult;
     }
 
 }

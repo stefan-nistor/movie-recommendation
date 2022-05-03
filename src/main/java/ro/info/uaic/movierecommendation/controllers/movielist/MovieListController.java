@@ -19,14 +19,12 @@ public class MovieListController {
     private MovieListService movieListService;
 
     @GetMapping
-    public ResponseEntity<List<MovieListDTO>> getMovieLists()
-    {
+    public ResponseEntity<List<MovieListDTO>> getMovieLists() {
         return ResponseEntity.ok().body(movieListService.findAll());
     }
 
     @GetMapping
-    public  ResponseEntity<MovieListDTO> getMovieListByName(@RequestParam("name") String name)
-    {
+    public ResponseEntity<MovieListDTO> getMovieListByName(@RequestParam("name") String name) {
         return ResponseEntity.ok().body(movieListService.findByName(name));
     }
 }

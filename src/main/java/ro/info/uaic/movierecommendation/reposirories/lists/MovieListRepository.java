@@ -15,8 +15,8 @@ public interface MovieListRepository extends JpaRepository<MovieList, Long> {
 
     Optional<MovieList> findByID(long idMovieList);
 
-    Optional<MovieList> addMovieToList(Movie movie,long idMovieList);
+    Optional<MovieList> addMovieToList(long idMovieList,long movieID);
 
-    Optional<MovieList> removeMovieFromList(Movie movie, long idMovieList);
+    Optional<MovieList> removeMovieFromList(long idMovieList,long movieID);
 
 }
