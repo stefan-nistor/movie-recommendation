@@ -1,5 +1,6 @@
 package ro.info.uaic.movierecommendation.models.movies;
 
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,5 +17,4 @@ public class MovieType {
     @Column(name = "id", nullable = false)
     private Long id;
     private Type type;
-
 }

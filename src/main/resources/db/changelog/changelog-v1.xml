@@ -9,4 +9,8 @@
         <sqlFile path="db/changelog/scripts/MR-3_create_users_table.sql"/>
     </changeSet>
 
+    <changeSet id="2" author="stefan.nistor">
+        <sqlFile path="db/changelog/scripts/MR-2_alter_users_table.sql"/>
+    </changeSet>
+
 </databaseChangeLog>
