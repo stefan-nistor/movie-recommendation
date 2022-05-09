@@ -7,5 +7,5 @@ import ro.info.uaic.movierecommendation.exceptions.UserException;
 public interface UserService {
 
     UserDTO saveNewUser(UserDTO user) throws EmailFormatException, UserException;
-
+    UserDTO updateUser(UserDTO user);
 }

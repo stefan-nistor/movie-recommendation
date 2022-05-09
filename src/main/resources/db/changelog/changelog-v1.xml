@@ -13,4 +13,8 @@
         <sqlFile path="db/changelog/scripts/MR-2_alter_users_table.sql"/>
     </changeSet>
 
+    <changeSet id="3" author="andrei.ciuta">
+        <sqlFile path="db/changelog/scripts/MR-4_alter_users_table.sql"/>
+    </changeSet>
+
 </databaseChangeLog>
