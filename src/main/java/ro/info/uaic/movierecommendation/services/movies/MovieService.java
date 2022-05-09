@@ -2,10 +2,18 @@ package ro.info.uaic.movierecommendation.services.movies;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import ro.info.uaic.movierecommendation.dtoresponses.movies.ActorDto;
 import ro.info.uaic.movierecommendation.dtoresponses.movies.MovieDto;
+import ro.info.uaic.movierecommendation.entites.UserEntity;
 import ro.info.uaic.movierecommendation.exceptions.MovieNotFoundException;
+import ro.info.uaic.movierecommendation.models.movies.Actor;
 import ro.info.uaic.movierecommendation.models.movies.Movie;
 import ro.info.uaic.movierecommendation.models.movies.Type;
 import ro.info.uaic.movierecommendation.repositories.movies.ActorRepository;
@@ -21,7 +29,6 @@ public class MovieService {
     @Autowired
     private ModelMapper modelMapper;
 
-
     @Autowired
     private MovieRepository repositoryMovie;
 
@@ -30,6 +37,9 @@ public class MovieService {
 
     @Autowired
     private MovieTypeRepository repositoryType;
+
+    @Autowired
+    private ModelMapper mapper;
 
     public List<MovieDto> findAll(Pageable paging) throws MovieNotFoundException{
 
@@ -81,6 +91,29 @@ public class MovieService {
         return movieDtoList;
 
     }
+
+    public Optional<Movie> getMovieById(Long id) {
+        return repositoryMovie.findById(id);
+    }
+
+    public MovieDto create(MovieDto newMovie) {
+
+        Movie insertedMovie = mapper.map(newMovie, Movie.class);
+        repositoryMovie.save(insertedMovie);
+
+        return newMovie;
+    }
+
+    public boolean delete(Movie foundMovie) {
+
+        if (!repositoryMovie.existsById(foundMovie.getId()))
+            return false;
+
+        repositoryMovie.delete(foundMovie);
+        return true;
+
+    }
+
 
 
 }
