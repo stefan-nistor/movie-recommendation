@@ -1,5 +1,6 @@
 package ro.info.uaic.movierecommendation.controllers.movies;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -23,6 +24,9 @@ public class MovieController {
 
     @Autowired
     private MovieService service;
+
+    @Autowired
+    private ModelMapper mapper;
 
     @GetMapping
     public ResponseEntity<List<MovieDto>> getMovieList(@RequestParam Optional<Integer> page,
@@ -80,9 +84,9 @@ public class MovieController {
     }
 
 
-    @DeleteMapping("/{postId}")
-    public ResponseEntity<?> deleteById(@PathVariable Long postId) {
-        Optional<Movie> movieOptional = service.getMovieById(postId);
+    @DeleteMapping("/{movieId}")
+    public ResponseEntity<?> deleteById(@PathVariable Long movieId) {
+        Optional<Movie> movieOptional = service.getMovieById(movieId);
 
         if (movieOptional.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -92,6 +96,25 @@ public class MovieController {
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @PutMapping(value = "/{movieId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<MovieDto> updateMovie(@PathVariable Long movieId, @RequestBody MovieDto updatedMovie) throws MovieNotFoundException{
+        Optional<Movie> movieOptional = service.getMovieById(movieId);
+
+        if (movieOptional.isEmpty())
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        Movie presentMovie = mapper.map(updatedMovie, Movie.class);
+        presentMovie.setId(movieOptional.get().getId());
+        updatedMovie = service.update(presentMovie);
+
+        if (updatedMovie == null)
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return new ResponseEntity<>(updatedMovie, new HttpHeaders(), HttpStatus.OK);
+    }
+
+
 
 
 
