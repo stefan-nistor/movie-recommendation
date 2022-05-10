@@ -30,5 +30,12 @@ public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(JsonUtil.objectToJsonString(result), HttpStatus.NOT_ACCEPTABLE);
     }
 
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Object> userNotFound(UserNotFoundException userNotFoundException) {
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("Timestamp", LocalDateTime.now());
+        result.put("Message", userNotFoundException.getMessage());
+        return new ResponseEntity<>(JsonUtil.objectToJsonString(result), HttpStatus.NOT_FOUND);
+    }
 
 }
