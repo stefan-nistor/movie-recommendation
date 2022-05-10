@@ -2,18 +2,10 @@ package ro.info.uaic.movierecommendation.services.movies;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import ro.info.uaic.movierecommendation.dtoresponses.movies.ActorDto;
 import ro.info.uaic.movierecommendation.dtoresponses.movies.MovieDto;
-import ro.info.uaic.movierecommendation.entites.UserEntity;
 import ro.info.uaic.movierecommendation.exceptions.MovieNotFoundException;
-import ro.info.uaic.movierecommendation.models.movies.Actor;
 import ro.info.uaic.movierecommendation.models.movies.Movie;
 import ro.info.uaic.movierecommendation.models.movies.Type;
 import ro.info.uaic.movierecommendation.repositories.movies.ActorRepository;
@@ -113,6 +105,17 @@ public class MovieService {
         return true;
 
     }
+
+    public MovieDto update(Movie movie) {
+
+        if (!repositoryMovie.existsById(movie.getId()))
+            throw new MovieNotFoundException(Movie.class, "id");
+
+        repositoryMovie.save(movie);
+        MovieDto updatedMovie = mapper.map(movie, MovieDto.class);
+        return updatedMovie;
+    }
+
 
 
 
