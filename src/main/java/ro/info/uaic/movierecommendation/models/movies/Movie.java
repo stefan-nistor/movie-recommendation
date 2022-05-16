@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import javax.persistence.*;
+import javax.validation.constraints.Null;
 import java.util.Date;
 import java.util.List;
 
@@ -35,5 +36,6 @@ public class Movie {
     private String writer;
     private boolean hasCaptions;
     private Date releaseDate;
+    private boolean isDeleted;
 
 }
