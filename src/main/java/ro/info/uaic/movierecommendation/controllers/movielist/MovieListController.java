@@ -18,7 +18,7 @@ public class MovieListController {
     @Autowired
     private MovieListService movieListService;
 
-    @GetMapping
+    @GetMapping("/searchN")
     public ResponseEntity<List<MovieListDTO>> getMovieLists() {
         return ResponseEntity.ok().body(movieListService.findAll());
     }

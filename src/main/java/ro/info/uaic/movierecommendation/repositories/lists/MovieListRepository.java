@@ -1,4 +1,4 @@
-package ro.info.uaic.movierecommendation.reposirories.lists;
+package ro.info.uaic.movierecommendation.repositories.lists;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -13,10 +13,7 @@ public interface MovieListRepository extends JpaRepository<MovieList, Long> {
 
     Optional<MovieList> findByName(String name);
 
-    Optional<MovieList> findByID(long idMovieList);
+    Optional<MovieList> findByid(Long idMovieList);
 
-    Optional<MovieList> addMovieToList(long idMovieList,long movieID);
-
-    Optional<MovieList> removeMovieFromList(long idMovieList,long movieID);
 
 }
