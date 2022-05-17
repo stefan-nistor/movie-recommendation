@@ -1,6 +1,7 @@
 package ro.info.uaic.movierecommendation.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.info.uaic.movierecommendation.dtoresponses.PasswordDTO;
@@ -17,13 +18,13 @@ public class ResetPasswordController {
     @PostMapping("/api/v1/reset-password/{email}")
     public ResponseEntity<?> sendResetToken(@PathVariable String email) throws UserNotFoundException {
         resetPasswordService.sendTokenToEmail(email);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PostMapping("/api/v1/reset-password")
     public ResponseEntity<?> resetPassword(@RequestBody PasswordDTO passwordDTO) throws InvalidPasswordException {
         resetPasswordService.resetPassword(passwordDTO);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }
