@@ -30,8 +30,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
     private static final String SIGN_UP_URL = "/api/v1/users";
     private static final String SECRET = "SECRET_KEY";
 
-
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if(request.getServletPath().equals("/api/v1/login")){

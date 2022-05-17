@@ -30,4 +30,11 @@ public class UserServiceImpl implements UserService{
         userRepo.save(mapper.map(user, UserEntity.class));
         return user;
     }
+
+    @Override
+    public UserDTO updateUser(UserDTO user) {
+        var userFromDb = userRepo.findByUsername(user.getUsername());
+        userRepo.save(mapper.map(user, UserEntity.class));
+        return user;
+    }
 }
