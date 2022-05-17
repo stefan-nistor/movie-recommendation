@@ -71,18 +71,17 @@ public class MovieController {
 
     }
 
-    @PostMapping(value="/create", consumes = MediaType.APPLICATION_JSON_VALUE,
+    @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> postMovie(@RequestBody MovieDto newMovie) {
 
-        MovieDto insertedMovie=service.createMovie(newMovie);
-        if(insertedMovie == null){
+        MovieDto insertedMovie = service.createMovie(newMovie);
+        if (insertedMovie == null) {
             return new ResponseEntity<>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
-        }else{
+        } else {
             return new ResponseEntity<>(insertedMovie, new HttpHeaders(), HttpStatus.CREATED);
         }
     }
-
 
     @DeleteMapping("/{movieId}")
     public ResponseEntity<?> deleteById(@PathVariable Long movieId) {
@@ -98,7 +97,7 @@ public class MovieController {
     }
 
     @PutMapping(value = "/{movieId}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<MovieDto> updateMovie(@PathVariable Long movieId, @RequestBody MovieDto updatedMovie) throws MovieNotFoundException{
+    public ResponseEntity<MovieDto> updateMovie(@PathVariable Long movieId, @RequestBody MovieDto updatedMovie) throws MovieNotFoundException {
         Optional<Movie> movieOptional = service.getMovieById(movieId);
 
         if (movieOptional.isEmpty())
@@ -113,9 +112,6 @@ public class MovieController {
 
         return new ResponseEntity<>(updatedMovie, new HttpHeaders(), HttpStatus.RESET_CONTENT);
     }
-
-
-
 
 
 }
