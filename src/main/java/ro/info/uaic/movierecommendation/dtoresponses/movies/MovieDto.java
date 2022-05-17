@@ -27,4 +27,16 @@ public class MovieDto {
     private Date releaseDate;
     @NotNull
     private List<Photo> photos;
+
+
+    public MovieDto() {
+    }
+
+    public MovieDto(String name, List<ActorDto> actors, List<MovieType> type, boolean hasCaptions) {
+        this.name = name;
+        this.actors = actors;
+        this.type = type;
+        this.hasCaptions = hasCaptions;
+    }
+
 }

@@ -1,6 +1,4 @@
 package ro.info.uaic.movierecommendation.models.movies;
-
-
 import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.*;
@@ -16,4 +14,10 @@ public class MovieType {
     @Column(name = "id", nullable = false)
     private Long id;
     private Type type;
+
+    public MovieType() {}
+    public MovieType(Type type) {
+        this.type = type;
+    }
+
 }

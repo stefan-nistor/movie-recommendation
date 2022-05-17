@@ -33,14 +33,14 @@ public class MovieService {
     @Autowired
     private ModelMapper mapper;
 
-    public List<MovieDto> findAll(Pageable paging) throws MovieNotFoundException{
+    public List<MovieDto> findAll(Pageable paging) throws MovieNotFoundException {
 
         List<MovieDto> movieDtoList = repositoryMovie.findAll(paging).getContent()
                 .stream().filter(movie -> !movie.isDeleted())
                 .map(movie -> modelMapper.map(movie, MovieDto.class))
                 .collect(Collectors.toList());
 
-        if(movieDtoList.isEmpty()){
+        if (movieDtoList.isEmpty()) {
             throw new MovieNotFoundException(Movie.class, "without parameters", "");
         }
         return movieDtoList;
@@ -53,7 +53,7 @@ public class MovieService {
                 .map(movie -> modelMapper.map(movie, MovieDto.class))
                 .collect(Collectors.toList());
 
-        if(movieDtoList.isEmpty()){
+        if (movieDtoList.isEmpty()) {
             throw new MovieNotFoundException(Movie.class, "name", name);
         }
         return movieDtoList;
@@ -65,7 +65,7 @@ public class MovieService {
                 .stream().filter(movie -> !movie.isDeleted())
                 .map(movie -> modelMapper.map(movie, MovieDto.class))
                 .collect(Collectors.toList());
-        if(movieDtoList.isEmpty()){
+        if (movieDtoList.isEmpty()) {
             throw new MovieNotFoundException(Movie.class, "type/types", type.toString());
         }
         return movieDtoList;
@@ -77,7 +77,7 @@ public class MovieService {
                 .stream().filter(movie -> !movie.isDeleted())
                 .map(movie -> modelMapper.map(movie, MovieDto.class))
                 .collect(Collectors.toList());
-        if(movieDtoList.isEmpty()){
+        if (movieDtoList.isEmpty()) {
             throw new MovieNotFoundException(Movie.class, "actor/actors", actorName.toString());
         }
         return movieDtoList;
@@ -85,7 +85,13 @@ public class MovieService {
     }
 
     public Optional<Movie> getMovieById(Long id) {
-        return repositoryMovie.findById(id);
+        if (repositoryMovie.existsById(id)) {
+            if (!repositoryMovie.getById(id).isDeleted()) {
+                return repositoryMovie.findById(id);
+            }
+        }
+        return repositoryMovie.findById(0L);
+
     }
 
     public MovieDto createMovie(MovieDto newMovie) {
@@ -120,8 +126,6 @@ public class MovieService {
         MovieDto updatedMovie = mapper.map(movie, MovieDto.class);
         return updatedMovie;
     }
-
-
 
 
 }

@@ -10,4 +10,7 @@ public class ActorDto {
     private String name;
     private int numberOfAwards;
 
+    public ActorDto(String name) {
+        this.name = name;
+    }
 }
