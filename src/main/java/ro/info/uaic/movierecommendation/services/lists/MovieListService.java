@@ -28,9 +28,7 @@ public class MovieListService {
     private MovieListRepository repositoryList;
 
     public List<MovieListDTO> findAll() {
-        List<MovieListDTO> movieListDTOList = repositoryList.findAll()
-                .stream().map(user -> modelMapper.map(user, MovieListDTO.class))
-                .collect(Collectors.toList());
+        List<MovieListDTO> movieListDTOList = repositoryList.findAll().stream().map(user -> modelMapper.map(user, MovieListDTO.class)).collect(Collectors.toList());
         return movieListDTOList;
     }
 
@@ -40,23 +38,28 @@ public class MovieListService {
     }
 
     public MovieListDTO findByID(Long movieListID) {
-        MovieListDTO movieListDTO = modelMapper.map(repositoryList.findByid(movieListID), MovieListDTO.class);
+        MovieListDTO movieListDTO = modelMapper.map(repositoryList.findById(movieListID), MovieListDTO.class);
         return movieListDTO;
     }
 
-    public MovieListDTO addMovieToList(MovieDto movie, MovieListDTO movieListDTO) {
-        MovieList movieList=modelMapper.map(repositoryList.findByName(movieListDTO.getName()), MovieList.class);
-        Movie movie1=modelMapper.map(repositoryMovie.findByName(movie.getName(), Pageable.unpaged()), Movie.class);
-        movieList.getMovies().add(movie1);
-        MovieListDTO movieListDTOResult = modelMapper.map(repositoryList.findByid(movieList.getId()), MovieListDTO.class);
+    public MovieListDTO addMovieToList(MovieDto movieDTO, MovieListDTO movieListDTO) {
+        MovieList movieList = modelMapper.map(repositoryList.findByName(movieListDTO.getName()), MovieList.class);
+        Movie movie = modelMapper.map((repositoryMovie.findByName(movieDTO.getName(), Pageable.unpaged())).getContent().get(0), Movie.class);
+        System.out.println(movie);
+        System.out.println(movieList);
+        movieList.getMovies().add(movie);
+        MovieListDTO movieListDTOResult = modelMapper.map(repositoryList.findById(movieList.getId()), MovieListDTO.class);
+        repositoryList.save(movieList);
         return movieListDTOResult;
     }
 
-    public MovieListDTO removeMovieToList(MovieDto movie, MovieListDTO movieListDTO) {
-        MovieList movieList=modelMapper.map(repositoryList.findByName(movieListDTO.getName()), MovieList.class);
-        Movie movie1=modelMapper.map(repositoryMovie.findByName(movie.getName(), Pageable.unpaged()), Movie.class);
-        movieList.getMovies().remove(movie1);
-        MovieListDTO movieListDTOResult = modelMapper.map(repositoryList.findByid(movieList.getId()), MovieListDTO.class);
+    public MovieListDTO removeMovieToList(MovieDto movieDTO, MovieListDTO movieListDTO) {
+        MovieList movieList = modelMapper.map(repositoryList.findByName(movieListDTO.getName()), MovieList.class);
+        Movie movie = modelMapper.map((repositoryMovie.findByName(movieDTO.getName(), Pageable.unpaged())).getContent().get(0), Movie.class);
+
+        movieList.getMovies().remove(movie);
+        MovieListDTO movieListDTOResult = modelMapper.map(repositoryList.findById(movieList.getId()), MovieListDTO.class);
+        repositoryList.save(movieList);
         return movieListDTOResult;
     }
 

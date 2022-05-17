@@ -21,5 +21,8 @@ public class MovieList {
     @JoinTable(name = "movielist_movie", joinColumns = @JoinColumn(name = "id_list"), inverseJoinColumns = @JoinColumn(name = "id_movie"))
     private List<Movie> movies;
 
-
+    @Override
+    public String toString() {
+        return "MovieList{" + "id=" + id + ", name='" + name + '\'' + ", movies=" + movies + '}';
+    }
 }

@@ -10,10 +10,5 @@ import java.util.UUID;
 
 @Repository
 public interface MovieListRepository extends JpaRepository<MovieList, Long> {
-
     Optional<MovieList> findByName(String name);
-
-    Optional<MovieList> findByid(Long idMovieList);
-
-
 }
