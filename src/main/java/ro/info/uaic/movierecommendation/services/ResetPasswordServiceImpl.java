@@ -2,6 +2,7 @@ package ro.info.uaic.movierecommendation.services;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ro.info.uaic.movierecommendation.dtoresponses.PasswordDTO;
 import ro.info.uaic.movierecommendation.dtoresponses.UserDTO;
@@ -26,6 +27,9 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
 
     @Autowired
     private ModelMapper mapper;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public void sendTokenToEmail(String email) throws UserNotFoundException {
@@ -69,8 +73,8 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
 
         var user = userRepo.findByPasswordToken(password.getResetToken());
         UserEntity userEntity = user.get();
-        userEntity.setPassword(password.getNewPassword());
-
+        userEntity.setPassword(passwordEncoder.encode(password.getNewPassword()));
+        userRepo.save(userEntity);
     }
 
 }
