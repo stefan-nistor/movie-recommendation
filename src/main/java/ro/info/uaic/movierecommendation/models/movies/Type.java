@@ -1,9 +1,23 @@
 package ro.info.uaic.movierecommendation.models.movies;
 
 public enum Type {
-    ACTION,
+    ADVENTURE,
+    ANIMATION,
+    CHILDREN,
     COMEDY,
+    FANTASY,
     ROMANCE,
     DRAMA,
-    HORROR;
+    ACTION,
+    CRIME,
+    THRILLER,
+    HORROR,
+    MYSTERY,
+    SCI_FI,
+    IMAX,
+    DOCUMENTARY,
+    WAR,
+    MUSICAL,
+    WESTERN,
+    FILM_NOIR,
 }

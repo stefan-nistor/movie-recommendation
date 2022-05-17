@@ -21,7 +21,6 @@ public class MovieService {
     @Autowired
     private ModelMapper modelMapper;
 
-
     @Autowired
     private MovieRepository repositoryMovie;
 
@@ -31,15 +30,18 @@ public class MovieService {
     @Autowired
     private MovieTypeRepository repositoryType;
 
+    @Autowired
+    private ModelMapper mapper;
+
     public List<MovieDto> findAll(Pageable paging) throws MovieNotFoundException{
 
         List<MovieDto> movieDtoList = repositoryMovie.findAll(paging).getContent()
-                .stream()
-                .map(user -> modelMapper.map(user, MovieDto.class))
+                .stream().filter(movie -> !movie.isDeleted())
+                .map(movie -> modelMapper.map(movie, MovieDto.class))
                 .collect(Collectors.toList());
 
         if(movieDtoList.isEmpty()){
-            throw new MovieNotFoundException(Movie.class, "without parameters");
+            throw new MovieNotFoundException(Movie.class, "without parameters", "");
         }
         return movieDtoList;
     }
@@ -47,8 +49,8 @@ public class MovieService {
     public List<MovieDto> findByName(String name, Pageable paging) throws MovieNotFoundException {
 
         List<MovieDto> movieDtoList = repositoryMovie.findByName(name, paging).getContent()
-                .stream()
-                .map(user -> modelMapper.map(user, MovieDto.class))
+                .stream().filter(movie -> !movie.isDeleted())
+                .map(movie -> modelMapper.map(movie, MovieDto.class))
                 .collect(Collectors.toList());
 
         if(movieDtoList.isEmpty()){
@@ -60,8 +62,8 @@ public class MovieService {
     public List<MovieDto> findByType(List<Type> type, Pageable paging) {
 
         List<MovieDto> movieDtoList = repositoryMovie.findByTypeIn(repositoryType.findByTypeIn(type), paging).getContent()
-                .stream()
-                .map(user -> modelMapper.map(user, MovieDto.class))
+                .stream().filter(movie -> !movie.isDeleted())
+                .map(movie -> modelMapper.map(movie, MovieDto.class))
                 .collect(Collectors.toList());
         if(movieDtoList.isEmpty()){
             throw new MovieNotFoundException(Movie.class, "type/types", type.toString());
@@ -72,8 +74,8 @@ public class MovieService {
     public List<MovieDto> findByActor(List<String> actorName, Pageable paging) throws MovieNotFoundException {
 
         List<MovieDto> movieDtoList = repositoryMovie.findByActorsIn(repositoryActor.findByNameIn(actorName), paging).getContent()
-                .stream()
-                .map(user -> modelMapper.map(user, MovieDto.class))
+                .stream().filter(movie -> !movie.isDeleted())
+                .map(movie -> modelMapper.map(movie, MovieDto.class))
                 .collect(Collectors.toList());
         if(movieDtoList.isEmpty()){
             throw new MovieNotFoundException(Movie.class, "actor/actors", actorName.toString());
@@ -81,6 +83,45 @@ public class MovieService {
         return movieDtoList;
 
     }
+
+    public Optional<Movie> getMovieById(Long id) {
+        return repositoryMovie.findById(id);
+    }
+
+    public MovieDto createMovie(MovieDto newMovie) {
+
+        Movie insertedMovie = mapper.map(newMovie, Movie.class);
+        insertedMovie.setDeleted(false);
+        repositoryMovie.save(insertedMovie);
+
+        return newMovie;
+    }
+
+    public boolean deleteMovie(Movie foundMovie) {
+
+        if (!repositoryMovie.existsById(foundMovie.getId()))
+            return false;
+
+        foundMovie.setDeleted(true);
+        repositoryMovie.save(foundMovie);
+        return true;
+
+    }
+
+    public MovieDto updateMovie(Movie movie) {
+
+        if (!repositoryMovie.existsById(movie.getId()))
+            throw new MovieNotFoundException(Movie.class, "id");
+
+        if (movie.isDeleted())
+            throw new MovieNotFoundException(Movie.class, "id");
+
+        repositoryMovie.save(movie);
+        MovieDto updatedMovie = mapper.map(movie, MovieDto.class);
+        return updatedMovie;
+    }
+
+
 
 
 }
