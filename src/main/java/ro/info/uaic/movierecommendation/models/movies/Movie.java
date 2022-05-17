@@ -34,8 +34,10 @@ public class Movie {
     private String duration;
     private String director;
     private String writer;
+    @Column(columnDefinition = "boolean default false")
     private boolean hasCaptions;
     private Date releaseDate;
+    @Column(columnDefinition = "boolean default false")
     private boolean isDeleted;
 
 }
