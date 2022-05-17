@@ -3,7 +3,6 @@ package ro.info.uaic.movierecommendation.dtoresponses.movies;
 import com.sun.istack.NotNull;
 import lombok.Data;
 import ro.info.uaic.movierecommendation.models.movies.MovieType;
-import ro.info.uaic.movierecommendation.models.movies.Photo;
 
 import java.util.Date;
 import java.util.List;
@@ -25,6 +24,13 @@ public class MovieDto {
     private String writer;
     private boolean hasCaptions;
     private Date releaseDate;
-    @NotNull
-    private List<Photo> photos;
+
+    // Images
+    private Integer imdbId;
+    private String posterPath;
+    private String backdropPath;
+
+    // votes
+    private Double voteAverage;
+    private Long voteCount;
 }
