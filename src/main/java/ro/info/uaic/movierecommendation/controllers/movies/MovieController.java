@@ -30,7 +30,8 @@ public class MovieController {
 
     @GetMapping
     public ResponseEntity<List<MovieDto>> getMovieList(@RequestParam Optional<Integer> page,
-                                                       @RequestParam Optional<Integer> size, @RequestParam Optional<String> sortBy) throws MovieNotFoundException {
+                                                       @RequestParam Optional<Integer> size,
+                                                       @RequestParam Optional<String> sortBy) throws MovieNotFoundException {
 
         return ResponseEntity.ok().body(service.findAll(PageRequest.of(
                 page.orElse(0),

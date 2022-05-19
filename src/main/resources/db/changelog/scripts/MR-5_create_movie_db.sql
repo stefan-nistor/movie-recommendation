@@ -18,11 +18,6 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
---
--- TOC entry 207 (class 1259 OID 18296)
--- Name: actor_seq; Type: SEQUENCE; Schema: public; Owner: developer
---
-
 CREATE SEQUENCE public.actor_seq
     START WITH 1
     INCREMENT BY 1
@@ -30,17 +25,9 @@ CREATE SEQUENCE public.actor_seq
     NO MAXVALUE
     CACHE 1;
 
-
-ALTER TABLE public.actor_seq OWNER TO developer;
-
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
-
---
--- TOC entry 211 (class 1259 OID 18549)
--- Name: actors; Type: TABLE; Schema: public; Owner: developer
---
 
 CREATE TABLE public.actors (
     id bigint NOT NULL,
@@ -48,53 +35,6 @@ CREATE TABLE public.actors (
     number_of_awards integer NOT NULL
 );
 
-
-ALTER TABLE public.actors OWNER TO developer;
-
---
--- TOC entry 203 (class 1259 OID 16886)
--- Name: databasechangelog; Type: TABLE; Schema: public; Owner: developer
---
-
-CREATE TABLE public.databasechangelog (
-    id character varying(255) NOT NULL,
-    author character varying(255) NOT NULL,
-    filename character varying(255) NOT NULL,
-    dateexecuted timestamp without time zone NOT NULL,
-    orderexecuted integer NOT NULL,
-    exectype character varying(10) NOT NULL,
-    md5sum character varying(35),
-    description character varying(255),
-    comments character varying(255),
-    tag character varying(255),
-    liquibase character varying(20),
-    contexts character varying(255),
-    labels character varying(255),
-    deployment_id character varying(10)
-);
-
-
-ALTER TABLE public.databasechangelog OWNER TO developer;
-
---
--- TOC entry 202 (class 1259 OID 16881)
--- Name: databasechangeloglock; Type: TABLE; Schema: public; Owner: developer
---
-
-CREATE TABLE public.databasechangeloglock (
-    id integer NOT NULL,
-    locked boolean NOT NULL,
-    lockgranted timestamp without time zone,
-    lockedby character varying(255)
-);
-
-
-ALTER TABLE public.databasechangeloglock OWNER TO developer;
-
---
--- TOC entry 206 (class 1259 OID 17225)
--- Name: hibernate_sequence; Type: SEQUENCE; Schema: public; Owner: developer
---
 
 CREATE SEQUENCE public.hibernate_sequence
     START WITH 1
@@ -104,38 +44,11 @@ CREATE SEQUENCE public.hibernate_sequence
     CACHE 1;
 
 
-ALTER TABLE public.hibernate_sequence OWNER TO developer;
-
---
--- TOC entry 214 (class 1259 OID 18620)
--- Name: movie_actors; Type: TABLE; Schema: public; Owner: developer
---
-
 CREATE TABLE public.movie_actors (
     id_movie bigint NOT NULL,
     id_actor bigint NOT NULL
 );
 
-
-ALTER TABLE public.movie_actors OWNER TO developer;
-
---
--- TOC entry 215 (class 1259 OID 18623)
--- Name: movie_photos; Type: TABLE; Schema: public; Owner: developer
---
-
-CREATE TABLE public.movie_photos (
-    id_movie bigint NOT NULL,
-    id_photo bigint NOT NULL
-);
-
-
-ALTER TABLE public.movie_photos OWNER TO developer;
-
---
--- TOC entry 208 (class 1259 OID 18298)
--- Name: movie_seq; Type: SEQUENCE; Schema: public; Owner: developer
---
 
 CREATE SEQUENCE public.movie_seq
     START WITH 1
@@ -144,40 +57,16 @@ CREATE SEQUENCE public.movie_seq
     NO MAXVALUE
     CACHE 1;
 
-
-ALTER TABLE public.movie_seq OWNER TO developer;
-
---
--- TOC entry 212 (class 1259 OID 18572)
--- Name: movie_type; Type: TABLE; Schema: public; Owner: developer
---
-
 CREATE TABLE public.movie_type (
     id bigint NOT NULL,
     name character varying(255),
     type integer
 );
 
-
-ALTER TABLE public.movie_type OWNER TO developer;
-
---
--- TOC entry 216 (class 1259 OID 18626)
--- Name: movie_types; Type: TABLE; Schema: public; Owner: developer
---
-
 CREATE TABLE public.movie_types (
     id_movie bigint NOT NULL,
     id_type bigint NOT NULL
 );
-
-
-ALTER TABLE public.movie_types OWNER TO developer;
-
---
--- TOC entry 217 (class 1259 OID 18629)
--- Name: movies; Type: TABLE; Schema: public; Owner: developer
---
 
 CREATE TABLE public.movies (
     id bigint NOT NULL,
@@ -196,42 +85,6 @@ CREATE TABLE public.movies (
     vote_count bigint
 );
 
-
-ALTER TABLE public.movies OWNER TO developer;
-
---
--- TOC entry 209 (class 1259 OID 18300)
--- Name: photo_seq; Type: SEQUENCE; Schema: public; Owner: developer
---
-
-CREATE SEQUENCE public.photo_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.photo_seq OWNER TO developer;
-
---
--- TOC entry 213 (class 1259 OID 18577)
--- Name: photos; Type: TABLE; Schema: public; Owner: developer
---
-
-CREATE TABLE public.photos (
-    id bigint NOT NULL,
-    image_as_byte_array bytea
-);
-
-
-ALTER TABLE public.photos OWNER TO developer;
-
---
--- TOC entry 210 (class 1259 OID 18302)
--- Name: type_seq; Type: SEQUENCE; Schema: public; Owner: developer
---
-
 CREATE SEQUENCE public.type_seq
     START WITH 1
     INCREMENT BY 1
@@ -240,106 +93,6 @@ CREATE SEQUENCE public.type_seq
     CACHE 1;
 
 
-ALTER TABLE public.type_seq OWNER TO developer;
-
---
--- TOC entry 205 (class 1259 OID 16894)
--- Name: users; Type: TABLE; Schema: public; Owner: developer
---
-
-CREATE TABLE public.users (
-    id integer NOT NULL,
-    username character varying(255),
-    password character varying(255),
-    email character varying(255),
-    firstname character varying(255),
-    lastname character varying(255)
-);
-
-
-ALTER TABLE public.users OWNER TO developer;
-
---
--- TOC entry 204 (class 1259 OID 16892)
--- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: developer
---
-
-CREATE SEQUENCE public.users_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.users_id_seq OWNER TO developer;
-
---
--- TOC entry 3056 (class 0 OID 0)
--- Dependencies: 204
--- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: developer
---
-
-ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
-
-
---
--- TOC entry 2882 (class 2604 OID 16897)
--- Name: users id; Type: DEFAULT; Schema: public; Owner: developer
---
-
-ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
-
-
---
--- TOC entry 3044 (class 0 OID 18549)
--- Dependencies: 211
--- Data for Name: actors; Type: TABLE DATA; Schema: public; Owner: developer
---
-
-
-
---
--- TOC entry 3036 (class 0 OID 16886)
--- Dependencies: 203
--- Data for Name: databasechangelog; Type: TABLE DATA; Schema: public; Owner: developer
---
-
-INSERT INTO public.databasechangelog (id, author, filename, dateexecuted, orderexecuted, exectype, md5sum, description, comments, tag, liquibase, contexts, labels, deployment_id) VALUES ('1', 'stefan.nistor', 'db/changelog/changelog-v1.xml', '2022-04-19 18:15:20.344677', 1, 'EXECUTED', '8:08df3d691620c87f563fe6b6e3d3a131', 'sqlFile', '', NULL, '4.5.0', NULL, NULL, '0381320299');
-INSERT INTO public.databasechangelog (id, author, filename, dateexecuted, orderexecuted, exectype, md5sum, description, comments, tag, liquibase, contexts, labels, deployment_id) VALUES ('2', 'stefan.nistor', 'db/changelog/changelog-v1.xml', '2022-05-03 13:06:34.419589', 2, 'EXECUTED', '8:00348fcd690924dae27845a212b0402f', 'sqlFile', '', NULL, '4.5.0', NULL, NULL, '1572394380');
-
-
---
--- TOC entry 3035 (class 0 OID 16881)
--- Dependencies: 202
--- Data for Name: databasechangeloglock; Type: TABLE DATA; Schema: public; Owner: developer
---
-
-INSERT INTO public.databasechangeloglock (id, locked, lockgranted, lockedby) VALUES (1, false, NULL, NULL);
-
-
---
--- TOC entry 3047 (class 0 OID 18620)
--- Dependencies: 214
--- Data for Name: movie_actors; Type: TABLE DATA; Schema: public; Owner: developer
---
-
-
-
---
--- TOC entry 3048 (class 0 OID 18623)
--- Dependencies: 215
--- Data for Name: movie_photos; Type: TABLE DATA; Schema: public; Owner: developer
---
-
-
-
---
--- TOC entry 3045 (class 0 OID 18572)
--- Dependencies: 212
--- Data for Name: movie_type; Type: TABLE DATA; Schema: public; Owner: developer
---
 
 INSERT INTO public.movie_type (id, name, type) VALUES (1, 'Adventure', 1);
 INSERT INTO public.movie_type (id, name, type) VALUES (2, 'Animation', 2);
@@ -360,13 +113,6 @@ INSERT INTO public.movie_type (id, name, type) VALUES (16, 'War', 16);
 INSERT INTO public.movie_type (id, name, type) VALUES (17, 'Musical', 17);
 INSERT INTO public.movie_type (id, name, type) VALUES (18, 'Western', 18);
 INSERT INTO public.movie_type (id, name, type) VALUES (19, 'Film-Noir', 19);
-
-
---
--- TOC entry 3049 (class 0 OID 18626)
--- Dependencies: 216
--- Data for Name: movie_types; Type: TABLE DATA; Schema: public; Owner: developer
---
 
 INSERT INTO public.movie_types (id_movie, id_type) VALUES (1, 1);
 INSERT INTO public.movie_types (id_movie, id_type) VALUES (1, 2);
@@ -2370,13 +2116,6 @@ INSERT INTO public.movie_types (id_movie, id_type) VALUES (999, 9);
 INSERT INTO public.movie_types (id_movie, id_type) VALUES (999, 19);
 INSERT INTO public.movie_types (id_movie, id_type) VALUES (1000, 9);
 
-
---
--- TOC entry 3050 (class 0 OID 18629)
--- Dependencies: 217
--- Data for Name: movies; Type: TABLE DATA; Schema: public; Owner: developer
---
-
 INSERT INTO public.movies (id, description, director, duration, has_captions, is_deleted, name, release_date, writer, imdb_id, backdrop_path, poster_path, vote_average, vote_count) VALUES (142, NULL, NULL, NULL, false, false, 'Shadows (Cienie)', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO public.movies (id, description, director, duration, has_captions, is_deleted, name, release_date, writer, imdb_id, backdrop_path, poster_path, vote_average, vote_count) VALUES (256, 'As part of a fertility research project, a male scientist agrees to carry a pregnancy in his own body.', NULL, 109, false, false, 'Junior', '1994-11-22 00:00:00', NULL, 110216, '/n0hwPBx8lf11ow7SQeCyQ7nC2EB.jpg', '/eQmgPrXf7c7daRdl3Zwgm65lw3o.jpg', 5.1, 1168);
 INSERT INTO public.movies (id, description, director, duration, has_captions, is_deleted, name, release_date, writer, imdb_id, backdrop_path, poster_path, vote_average, vote_count) VALUES (263, 'Maggie has had four children, by four different fathers, removed by social services because of a previous violent relationship. When she meets Jorge, a gentle Latin American refugee, she gradually sees her chance for happiness, but her history still haunts her.', NULL, 101, false, false, 'Ladybird Ladybird', '1994-02-18 00:00:00', NULL, 110296, '/cNftai0xQHlb3wiqWlFioAWNWwF.jpg', '/91KSK1xKdVEIDASKRo9ahBFCtM2.jpg', 7.2, 66);
@@ -3362,207 +3101,48 @@ INSERT INTO public.movies (id, description, director, duration, has_captions, is
 INSERT INTO public.movies (id, description, director, duration, has_captions, is_deleted, name, release_date, writer, imdb_id, backdrop_path, poster_path, vote_average, vote_count) VALUES (1000, 'Gabriela, a Columbian immigrant, is obsessed with understanding violent crime. The current string of murders by "The Blue Blood Killer" of affluent Miami socialites provides her with fodder for her scrapbook of death. She lands a job with a post-murder cleaning service and during a Blue-Blood clean-up job, discovers evidence that police have overlooked.', NULL, 88, false, false, 'Curdled', '1996-09-06 00:00:00', NULL, 115994, '/26OkTKjSDRW35dcXQJz85fYw9mS.jpg', '/a8GtmDKoifFkcyqeqcjQjLVIOVc.jpg', 6, 90);
 
 
---
--- TOC entry 3046 (class 0 OID 18577)
--- Dependencies: 213
--- Data for Name: photos; Type: TABLE DATA; Schema: public; Owner: developer
---
-
-
-
---
--- TOC entry 3038 (class 0 OID 16894)
--- Dependencies: 205
--- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: developer
---
-
-INSERT INTO public.users (id, username, password, email, firstname, lastname) VALUES (1, 'John123', '$2a$10$Cozahei9MNnECIrAgatstusSaTrb9w5yoiIgRVg77kwZ/iTa0.7KK', 'something@tempmail.com', 'John', 'McRib');
-
-
---
--- TOC entry 3057 (class 0 OID 0)
--- Dependencies: 207
--- Name: actor_seq; Type: SEQUENCE SET; Schema: public; Owner: developer
---
-
 SELECT pg_catalog.setval('public.actor_seq', 1, false);
 
-
---
--- TOC entry 3058 (class 0 OID 0)
--- Dependencies: 206
--- Name: hibernate_sequence; Type: SEQUENCE SET; Schema: public; Owner: developer
---
 
 SELECT pg_catalog.setval('public.hibernate_sequence', 1, false);
 
 
---
--- TOC entry 3059 (class 0 OID 0)
--- Dependencies: 208
--- Name: movie_seq; Type: SEQUENCE SET; Schema: public; Owner: developer
---
-
 SELECT pg_catalog.setval('public.movie_seq', 1, false);
-
-
---
--- TOC entry 3060 (class 0 OID 0)
--- Dependencies: 209
--- Name: photo_seq; Type: SEQUENCE SET; Schema: public; Owner: developer
---
 
 SELECT pg_catalog.setval('public.photo_seq', 1, false);
 
-
---
--- TOC entry 3061 (class 0 OID 0)
--- Dependencies: 210
--- Name: type_seq; Type: SEQUENCE SET; Schema: public; Owner: developer
---
-
 SELECT pg_catalog.setval('public.type_seq', 1, false);
 
-
---
--- TOC entry 3062 (class 0 OID 0)
--- Dependencies: 204
--- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: developer
---
-
 SELECT pg_catalog.setval('public.users_id_seq', 1, true);
-
-
---
--- TOC entry 2892 (class 2606 OID 18553)
--- Name: actors actors_pkey; Type: CONSTRAINT; Schema: public; Owner: developer
---
 
 ALTER TABLE ONLY public.actors
     ADD CONSTRAINT actors_pkey PRIMARY KEY (id);
 
 
---
--- TOC entry 2886 (class 2606 OID 16885)
--- Name: databasechangeloglock databasechangeloglock_pkey; Type: CONSTRAINT; Schema: public; Owner: developer
---
-
 ALTER TABLE ONLY public.databasechangeloglock
     ADD CONSTRAINT databasechangeloglock_pkey PRIMARY KEY (id);
 
-
---
--- TOC entry 2894 (class 2606 OID 18576)
--- Name: movie_type movie_type_pkey; Type: CONSTRAINT; Schema: public; Owner: developer
---
 
 ALTER TABLE ONLY public.movie_type
     ADD CONSTRAINT movie_type_pkey PRIMARY KEY (id);
 
 
---
--- TOC entry 2902 (class 2606 OID 18638)
--- Name: movies movies_pkey; Type: CONSTRAINT; Schema: public; Owner: developer
---
-
 ALTER TABLE ONLY public.movies
     ADD CONSTRAINT movies_pkey PRIMARY KEY (id);
 
-
---
--- TOC entry 2898 (class 2606 OID 18584)
--- Name: photos photos_pkey; Type: CONSTRAINT; Schema: public; Owner: developer
---
-
-ALTER TABLE ONLY public.photos
-    ADD CONSTRAINT photos_pkey PRIMARY KEY (id);
-
-
---
--- TOC entry 2896 (class 2606 OID 18588)
--- Name: movie_type uk_15y64yn49kyy14xehefw6c9mt; Type: CONSTRAINT; Schema: public; Owner: developer
---
 
 ALTER TABLE ONLY public.movie_type
     ADD CONSTRAINT uk_15y64yn49kyy14xehefw6c9mt UNIQUE (name);
 
 
---
--- TOC entry 2900 (class 2606 OID 18640)
--- Name: movie_photos uk_io8q2s0i4gwwfe0f8jytmd8mx; Type: CONSTRAINT; Schema: public; Owner: developer
---
-
-ALTER TABLE ONLY public.movie_photos
-    ADD CONSTRAINT uk_io8q2s0i4gwwfe0f8jytmd8mx UNIQUE (id_photo);
-
-
---
--- TOC entry 2888 (class 2606 OID 16902)
--- Name: users users_id_key; Type: CONSTRAINT; Schema: public; Owner: developer
---
-
-ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_id_key UNIQUE (id);
-
-
---
--- TOC entry 2890 (class 2606 OID 16904)
--- Name: users users_username_key; Type: CONSTRAINT; Schema: public; Owner: developer
---
-
-ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_username_key UNIQUE (username);
-
-
---
--- TOC entry 2904 (class 2606 OID 18646)
--- Name: movie_actors fk7go0u3bcdkjrgrr0o5jwnyv0y; Type: FK CONSTRAINT; Schema: public; Owner: developer
---
-
 ALTER TABLE ONLY public.movie_actors
     ADD CONSTRAINT fk7go0u3bcdkjrgrr0o5jwnyv0y FOREIGN KEY (id_movie) REFERENCES public.movies(id);
-
-
---
--- TOC entry 2908 (class 2606 OID 18666)
--- Name: movie_types fkb76fnpnn07maobe1rj1n0s1ix; Type: FK CONSTRAINT; Schema: public; Owner: developer
---
 
 ALTER TABLE ONLY public.movie_types
     ADD CONSTRAINT fkb76fnpnn07maobe1rj1n0s1ix FOREIGN KEY (id_movie) REFERENCES public.movies(id);
 
-
---
--- TOC entry 2905 (class 2606 OID 18651)
--- Name: movie_photos fkhyb4atorxaueo9p9s8k0ulsxi; Type: FK CONSTRAINT; Schema: public; Owner: developer
---
-
-ALTER TABLE ONLY public.movie_photos
-    ADD CONSTRAINT fkhyb4atorxaueo9p9s8k0ulsxi FOREIGN KEY (id_photo) REFERENCES public.photos(id);
-
-
---
--- TOC entry 2906 (class 2606 OID 18656)
--- Name: movie_photos fkpktg9s8f0vrcfejgjqqx7ghgo; Type: FK CONSTRAINT; Schema: public; Owner: developer
---
-
-ALTER TABLE ONLY public.movie_photos
-    ADD CONSTRAINT fkpktg9s8f0vrcfejgjqqx7ghgo FOREIGN KEY (id_movie) REFERENCES public.movies(id);
-
-
---
--- TOC entry 2907 (class 2606 OID 18661)
--- Name: movie_types fkplqoahc9pnsndpyg7yqinxd4u; Type: FK CONSTRAINT; Schema: public; Owner: developer
---
-
 ALTER TABLE ONLY public.movie_types
     ADD CONSTRAINT fkplqoahc9pnsndpyg7yqinxd4u FOREIGN KEY (id_type) REFERENCES public.movie_type(id);
-
-
---
--- TOC entry 2903 (class 2606 OID 18641)
--- Name: movie_actors fkqi2q4p5er1m4bn9ryvhilpiu7; Type: FK CONSTRAINT; Schema: public; Owner: developer
---
 
 ALTER TABLE ONLY public.movie_actors
     ADD CONSTRAINT fkqi2q4p5er1m4bn9ryvhilpiu7 FOREIGN KEY (id_actor) REFERENCES public.actors(id);
