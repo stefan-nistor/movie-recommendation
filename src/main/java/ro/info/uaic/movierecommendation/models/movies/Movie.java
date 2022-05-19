@@ -21,7 +21,6 @@ public class Movie {
     @Column(name = "id", nullable = false)
     private Long id;
     private String name;
-    @Lob
     private String description;
     @ManyToMany(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinTable(name = "movie_actors", joinColumns = @JoinColumn(name = "id_movie"), inverseJoinColumns = @JoinColumn(name = "id_actor"))
