@@ -16,8 +16,4 @@
     <changeSet id="3" author="andrei.ciuta">
         <sqlFile path="db/changelog/scripts/MR-4_alter_users_table.sql"/>
     </changeSet>
-
-    <changeSet id="4" author="Paul513607">
-        <sqlFile path="db/changelog/scripts/MR-5_create_movie_db.sql"/>
-    </changeSet>
 </databaseChangeLog>
