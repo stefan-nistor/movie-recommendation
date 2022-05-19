@@ -38,6 +38,16 @@ public class MovieController {
                 Sort.Direction.ASC, sortBy.orElse("id"))));
     }
 
+    @GetMapping("/top")
+    public ResponseEntity<List<MovieDto>> getMovieTopList(@RequestParam Optional<Integer> page,
+                                                       @RequestParam Optional<Integer> size, @RequestParam Optional<String> sortBy) throws MovieNotFoundException {
+
+        return ResponseEntity.ok().body(service.findMostVoted(PageRequest.of(
+                page.orElse(0),
+                size.orElse(5),
+                Sort.Direction.ASC, sortBy.orElse("id"))));
+    }
+
     @GetMapping("/searchN")
     public ResponseEntity<List<MovieDto>> getMovieByName(@RequestParam("name") String name, @RequestParam Optional<Integer> page,
                                                          @RequestParam Optional<Integer> size, @RequestParam Optional<String> sortBy) throws MovieNotFoundException {
@@ -76,8 +86,9 @@ public class MovieController {
     public ResponseEntity<?> postMovie(@RequestBody MovieDto newMovie) {
 
         MovieDto insertedMovie = service.createMovie(newMovie);
+
         if (insertedMovie == null) {
-            return new ResponseEntity<>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null, new HttpHeaders(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(insertedMovie, new HttpHeaders(), HttpStatus.CREATED);
         }

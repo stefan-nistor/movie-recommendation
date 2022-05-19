@@ -46,6 +46,20 @@ public class MovieService {
         return movieDtoList;
     }
 
+    public List<MovieDto> findMostVoted(Pageable paging) throws MovieNotFoundException {
+
+        List<MovieDto> movieDtoList = repositoryMovie.findAll(paging).getContent()
+                .stream().filter(movie -> !movie.isDeleted())
+                .map(movie -> modelMapper.map(movie, MovieDto.class)).sorted((Comparator.comparingLong(MovieDto::getVoteCount)
+                        .reversed()))
+                .collect(Collectors.toList());
+
+        if (movieDtoList.isEmpty()) {
+            throw new MovieNotFoundException(Movie.class, "without parameters", "");
+        }
+        return movieDtoList;
+    }
+
     public List<MovieDto> findByName(String name, Pageable paging) throws MovieNotFoundException {
 
         List<MovieDto> movieDtoList = repositoryMovie.findByName(name, paging).getContent()
@@ -97,7 +111,6 @@ public class MovieService {
     public MovieDto createMovie(MovieDto newMovie) {
 
         Movie insertedMovie = mapper.map(newMovie, Movie.class);
-        insertedMovie.setDeleted(false);
         repositoryMovie.save(insertedMovie);
 
         return newMovie;
