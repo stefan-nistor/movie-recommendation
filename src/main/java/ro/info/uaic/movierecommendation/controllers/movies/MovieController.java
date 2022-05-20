@@ -9,11 +9,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ro.info.uaic.movierecommendation.dtoresponses.UserMovieLabelDto;
 import ro.info.uaic.movierecommendation.dtoresponses.movies.MovieDto;
 import ro.info.uaic.movierecommendation.exceptions.MovieNotFoundException;
 import ro.info.uaic.movierecommendation.models.movies.Movie;
 import ro.info.uaic.movierecommendation.models.movies.Type;
 import ro.info.uaic.movierecommendation.services.movies.MovieService;
+import ro.info.uaic.movierecommendation.entites.UserMovieLabel;
 
 import java.util.List;
 import java.util.Optional;
@@ -115,8 +117,19 @@ public class MovieController {
         return new ResponseEntity<>(updatedMovie, new HttpHeaders(), HttpStatus.RESET_CONTENT);
     }
 
+    @GetMapping(value = "/singlePrediction", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> getSinglePrediction(@RequestBody UserMovieLabelDto userMovieLabelDto) {
+        Boolean predictedLevel = service.getSinglePrediction(userMovieLabelDto);
+
+        return new ResponseEntity<>(predictedLevel, new HttpHeaders(), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/predictions/{noOfPredictions}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<MovieDto>> getPredictions(@PathVariable Integer noOfPredictions,
+                                                         @RequestBody List<UserMovieLabelDto> userMovieLabelDtoList) {
+        List<MovieDto> movieList = service.getPredictions(noOfPredictions, userMovieLabelDtoList);
 
 
-
-
+        return new ResponseEntity<>(movieList, new HttpHeaders(), HttpStatus.OK);
+    }
 }

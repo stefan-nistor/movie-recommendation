@@ -9,9 +9,12 @@ import ro.info.uaic.movierecommendation.models.movies.MovieType;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, Long> {
 
+    Optional<Movie> findByName(String name);
     Page<Movie> findByName(String name, Pageable paging);
     Page<Movie> findByTypeIn(List<MovieType> type, Pageable paging);
     Page<Movie> findByActorsIn(List<Actor> actor, Pageable paging);
