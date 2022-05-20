@@ -19,9 +19,9 @@ public class MovieType {
     @SequenceGenerator(name="type_generator", sequenceName = "type_seq", allocationSize=1)
     private Type type;
 
-    public MovieType() {}
+
+    public MovieType(){}
     public MovieType(Type type) {
         this.type = type;
     }
-
 }

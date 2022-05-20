@@ -33,4 +33,12 @@ public class MovieDto {
     // votes
     private Double voteAverage;
     private Long voteCount;
+
+    public MovieDto(){}
+    public MovieDto(String name, List<ActorDto> actors, List<MovieType> type, Boolean hasCaptions) {
+        this.name = name;
+        this.actors = actors;
+        this.type = type;
+        this.hasCaptions = hasCaptions;
+    }
 }

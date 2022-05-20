@@ -88,7 +88,7 @@ public class MovieController {
         MovieDto insertedMovie = service.createMovie(newMovie);
 
         if (insertedMovie == null) {
-            return new ResponseEntity<>(null, new HttpHeaders(), HttpStatus.OK);
+            return new ResponseEntity<>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
         } else {
             return new ResponseEntity<>(insertedMovie, new HttpHeaders(), HttpStatus.CREATED);
         }
