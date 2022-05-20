@@ -18,7 +18,6 @@ import ro.info.uaic.movierecommendation.models.movies.Type;
 import ro.info.uaic.movierecommendation.repositories.movies.ActorRepository;
 import ro.info.uaic.movierecommendation.repositories.movies.MovieRepository;
 import ro.info.uaic.movierecommendation.repositories.movies.MovieTypeRepository;
-import ro.info.uaic.movierecommendation.entites.UserMovieLabel;
 
 import java.util.*;
 import java.util.stream.Collectors;
