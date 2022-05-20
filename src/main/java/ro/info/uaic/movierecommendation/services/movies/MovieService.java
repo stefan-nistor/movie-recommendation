@@ -147,7 +147,7 @@ public class MovieService {
 
     public Boolean getSinglePrediction(UserMovieLabelDto userMovieLabelDto) {
         JSONObject jsonObject = new JSONObject();
-
+      
         jsonObject.put("userId", userMovieLabelDto.getUserId());
         jsonObject.put("movieId", userMovieLabelDto.getMovieId());
         jsonObject.put("label", userMovieLabelDto.getLabel());
@@ -196,5 +196,4 @@ public class MovieService {
 
         return moviesToReturn;
     }
-
 }
