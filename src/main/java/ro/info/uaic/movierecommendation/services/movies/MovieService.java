@@ -1,9 +1,16 @@
 package ro.info.uaic.movierecommendation.services.movies;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import ro.info.uaic.movierecommendation.dtoresponses.UserMovieLabelDto;
 import ro.info.uaic.movierecommendation.dtoresponses.movies.MovieDto;
 import ro.info.uaic.movierecommendation.exceptions.MovieNotFoundException;
 import ro.info.uaic.movierecommendation.models.movies.Movie;
@@ -11,6 +18,7 @@ import ro.info.uaic.movierecommendation.models.movies.Type;
 import ro.info.uaic.movierecommendation.repositories.movies.ActorRepository;
 import ro.info.uaic.movierecommendation.repositories.movies.MovieRepository;
 import ro.info.uaic.movierecommendation.repositories.movies.MovieTypeRepository;
+import ro.info.uaic.movierecommendation.entites.UserMovieLabel;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -122,6 +130,55 @@ public class MovieService {
     }
 
 
+    public Boolean getSinglePrediction(UserMovieLabelDto userMovieLabelDto) {
+        JSONObject jsonObject = new JSONObject();
 
+        jsonObject.put("userId", userMovieLabelDto.getUserId());
+        jsonObject.put("movieId", userMovieLabelDto.getMovieId());
+        jsonObject.put("label", userMovieLabelDto.getLabel());
 
+        String URL = "https://mlmoduleapi.azurewebsites.net/Recommendations/singlePrediction";
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<String> request = new HttpEntity<>(jsonObject.toString(), headers);
+
+        JSONObject resultJson = restTemplate.postForObject(URL, request, JSONObject.class);
+        if (resultJson == null) {
+            throw new RuntimeException("No result");
+        }
+
+        return (Boolean) resultJson.get("predictionLabel");
+    }
+
+    public List<MovieDto> getPredictions(Integer noOfPredictions, List<UserMovieLabelDto> userMovieLabelList) {
+        JSONArray jsonArray = new JSONArray(userMovieLabelList);
+        List<MovieDto> moviesToReturn = new ArrayList<>();
+
+        String URL = "https://mlmoduleapi.azurewebsites.net/Recommendations/predictions/" + noOfPredictions;
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<String> request = new HttpEntity<>(jsonArray.toString(), headers);
+
+        Object[] resultJson = restTemplate.postForObject(URL, request, Object[].class);
+
+        if (resultJson == null) {
+            throw new RuntimeException("No result");
+        }
+
+        for (Object object : resultJson) {
+            Long currMovieId = Long.parseLong(object.toString());
+            Optional<Movie> currMovieOpt = repositoryMovie.findById(currMovieId);
+
+            if (currMovieOpt.isPresent()) {
+                MovieDto currMovieDto = mapper.map(currMovieOpt.get(), MovieDto.class);
+                moviesToReturn.add(currMovieDto);
+            }
+        }
+
+        return moviesToReturn;
+    }
 }
