@@ -45,18 +45,17 @@ public class TestingMovieManagement {
     private ModelMapper mapper;
 
     @Test
-    public void whenConvertMovieEntityToMovieDto() {
+    public void testConvertMovieEntityToMovieDto() {
         Movie movie = new Movie();
         movie.setId(1L);
         movie.setName("Title");
-
         MovieDto postDto = mapper.map(movie, MovieDto.class);
         assertEquals(movie.getName(), postDto.getName());
 
     }
 
     @Test
-    public void whenConvertMovieDtoToMovieEntity() {
+    public void testConvertMovieDtoToMovieEntity() {
         MovieDto movieDto = new MovieDto();
 
         movieDto.setName("Title");
@@ -67,7 +66,7 @@ public class TestingMovieManagement {
     }
 
     @Test
-    public void createStudentCourse() throws Exception {
+    public void testCreateMovie() throws Exception {
         MovieDto mockMovie = new MovieDto("Curierul",
                 Arrays.asList(new ActorDto("Jason Statham")), Arrays.asList(new MovieType(ACTION), new MovieType(COMEDY)), true);
         String exampleMovieJson = "{\n" +
