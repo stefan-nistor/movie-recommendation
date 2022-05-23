@@ -15,6 +15,7 @@ import ro.info.uaic.movierecommendation.exceptions.MovieNotFoundException;
 import ro.info.uaic.movierecommendation.models.movies.Movie;
 import ro.info.uaic.movierecommendation.models.movies.Type;
 import ro.info.uaic.movierecommendation.services.movies.MovieService;
+import ro.info.uaic.movierecommendation.entites.UserMovieLabel;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +35,7 @@ public class MovieController {
                                                        @RequestParam Optional<Integer> size,
                                                        @RequestParam Optional<String> sortBy)
             throws MovieNotFoundException {
+
 
         return ResponseEntity.ok().body(service.findAll(PageRequest.of(page.orElse(0), size.orElse(5),
                 Sort.Direction.ASC, sortBy.orElse("id"))));
@@ -153,4 +155,6 @@ public class MovieController {
         return new ResponseEntity<>(movieList, new HttpHeaders(), HttpStatus.OK);
     }
 
+        return new ResponseEntity<>(movieList, new HttpHeaders(), HttpStatus.OK);
+    }
 }
