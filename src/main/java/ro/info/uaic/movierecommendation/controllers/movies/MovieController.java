@@ -155,6 +155,4 @@ public class MovieController {
         return new ResponseEntity<>(movieList, new HttpHeaders(), HttpStatus.OK);
     }
 
-        return new ResponseEntity<>(movieList, new HttpHeaders(), HttpStatus.OK);
-    }
 }
