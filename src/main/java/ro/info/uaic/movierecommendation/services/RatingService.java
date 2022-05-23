@@ -4,9 +4,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ro.info.uaic.movierecommendation.dtoresponses.UserMovieLabelDto;
+import ro.info.uaic.movierecommendation.entites.UserEntity;
 import ro.info.uaic.movierecommendation.entites.UserMovieLabel;
 import ro.info.uaic.movierecommendation.exceptions.RatingNotFoundException;
+import ro.info.uaic.movierecommendation.exceptions.UserNotFoundException;
 import ro.info.uaic.movierecommendation.repos.RatingRepository;
+import ro.info.uaic.movierecommendation.repos.UserRepo;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,11 +21,25 @@ public class RatingService {
     private RatingRepository ratingRepo;
 
     @Autowired
+    private UserRepo userRepo;
+
+    @Autowired
     private ModelMapper mapper;
 
     public List<UserMovieLabelDto> getAllRatings() {
         return ratingRepo.findAll().stream()
                 .map(rating -> mapper.map(rating, UserMovieLabelDto.class))
+                .collect(Collectors.toList());
+    }
+
+    public List<UserMovieLabelDto> getRatingsForUser(Long userId) throws UserNotFoundException {
+        if (!userRepo.existsById(userId)) {
+            throw new UserNotFoundException("User not found for id " + userId);
+        }
+
+        List<UserMovieLabel> labels = ratingRepo.findByUserId(userId.toString());
+        return labels.stream()
+                .map(label -> mapper.map(label, UserMovieLabelDto.class))
                 .collect(Collectors.toList());
     }
 

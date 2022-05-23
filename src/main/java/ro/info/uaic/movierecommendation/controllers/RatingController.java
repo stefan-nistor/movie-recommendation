@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ro.info.uaic.movierecommendation.dtoresponses.UserMovieLabelDto;
 import ro.info.uaic.movierecommendation.entites.UserMovieLabel;
 import ro.info.uaic.movierecommendation.exceptions.RatingNotFoundException;
+import ro.info.uaic.movierecommendation.exceptions.UserNotFoundException;
 import ro.info.uaic.movierecommendation.services.RatingService;
 
 import java.util.List;
@@ -22,6 +23,13 @@ public class RatingController {
     public ResponseEntity<List<UserMovieLabelDto>> getAllRatings() {
         return ResponseEntity.ok().body(ratingService.getAllRatings());
     }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<UserMovieLabelDto>> getRatingsForUser(@PathVariable Long userId)
+            throws UserNotFoundException {
+        return ResponseEntity.ok().body(ratingService.getRatingsForUser(userId));
+    }
+
 
     @GetMapping
     public ResponseEntity<UserMovieLabel> getRating(@RequestBody UserMovieLabelDto userMovieLabelDto)
