@@ -64,7 +64,7 @@ public class MovieController {
 
 
     @GetMapping("/names")
-    public ResponseEntity<List<MovieDto>> getMovieByName(@RequestParam("name") String name,
+    public ResponseEntity<MovieDto> getMovieByName(@RequestParam("name") String name,
                                                          @RequestParam Optional<Integer> page,
                                                          @RequestParam Optional<Integer> size,
                                                          @RequestParam Optional<String> sortBy)

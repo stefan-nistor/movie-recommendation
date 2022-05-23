@@ -65,16 +65,15 @@ public class MovieService {
         return movieDtoList;
     }
 
-    public List<MovieDto> findByName(String name, Pageable paging) throws MovieNotFoundException {
+    public MovieDto findByName(String name, Pageable paging) throws MovieNotFoundException {
 
-        List<MovieDto> movieDtoList = repositoryMovie.findByName(name, paging).getContent().stream()
-                .filter(movie -> !movie.isDeleted()).map(movie -> modelMapper.map(movie, MovieDto.class))
-                .collect(Collectors.toList());
+        Optional<Movie> movie = repositoryMovie.findByName(name);
 
-        if (movieDtoList.isEmpty()) {
+        if (movie.isEmpty() || movie.get().isDeleted()) {
             throw new MovieNotFoundException(Movie.class, "name", name);
         }
-        return movieDtoList;
+
+        return mapper.map(movie, MovieDto.class);
     }
 
     public List<MovieDto> findByType(List<Type> type, Pageable paging) {

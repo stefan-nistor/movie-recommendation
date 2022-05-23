@@ -35,12 +35,12 @@ public class MovieListController {
 
     @PostMapping("/add")
     public ResponseEntity<MovieListDTO> addMovieToList(@RequestParam("MovieListName") String movieListName, @RequestParam("MovieName") String movieName) {
-        return ResponseEntity.ok().body(movieListService.addMovieToList(movieService.findByName(movieName, Pageable.unpaged()).get(0), movieListService.findByName(movieListName)));
+        return ResponseEntity.ok().body(movieListService.addMovieToList(movieService.findByName(movieName, Pageable.unpaged()), movieListService.findByName(movieListName)));
     }
 
     @DeleteMapping("/remove")
     public ResponseEntity<MovieListDTO> removeMovieFromList(@RequestParam("MovieListName") String movieListName, @RequestParam("MovieName") String movieName) {
-        return ResponseEntity.ok().body(movieListService.removeMovieToList(movieService.findByName(movieName, Pageable.unpaged()).get(0), movieListService.findByName(movieListName)));
+        return ResponseEntity.ok().body(movieListService.removeMovieToList(movieService.findByName(movieName, Pageable.unpaged()), movieListService.findByName(movieListName)));
     }
 
     @PostMapping("/create")
