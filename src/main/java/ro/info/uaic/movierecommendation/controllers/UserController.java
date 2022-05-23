@@ -1,6 +1,7 @@
 package ro.info.uaic.movierecommendation.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,7 +12,6 @@ import ro.info.uaic.movierecommendation.dtoresponses.UserDTO;
 import ro.info.uaic.movierecommendation.exceptions.EmailFormatException;
 import ro.info.uaic.movierecommendation.exceptions.UserException;
 import ro.info.uaic.movierecommendation.services.UserService;
-import ro.info.uaic.movierecommendation.util.Hashing;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -27,6 +27,6 @@ public class UserController {
     ResponseEntity<?> createNewUser(@RequestBody UserDTO userDTO) throws EmailFormatException, UserException {
         userDTO.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
         userService.saveNewUser(userDTO);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

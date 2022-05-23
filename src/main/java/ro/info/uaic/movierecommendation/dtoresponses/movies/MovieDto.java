@@ -2,6 +2,7 @@ package ro.info.uaic.movierecommendation.dtoresponses.movies;
 
 import com.sun.istack.NotNull;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ro.info.uaic.movierecommendation.models.movies.MovieType;
 
 import java.util.Date;
@@ -9,6 +10,7 @@ import java.util.List;
 
 
 @Data
+@NoArgsConstructor
 public class MovieDto {
 
     @NotNull
@@ -33,4 +35,11 @@ public class MovieDto {
     // votes
     private Double voteAverage;
     private Long voteCount;
+
+    public MovieDto(String name, List<ActorDto> actors, List<MovieType> type, boolean hasCaptions) {
+        this.name = name;
+        this.actors = actors;
+        this.type = type;
+        this.hasCaptions = hasCaptions;
+    }
 }

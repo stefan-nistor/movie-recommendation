@@ -1,9 +1,16 @@
 package ro.info.uaic.movierecommendation.services.movies;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import ro.info.uaic.movierecommendation.dtoresponses.UserMovieLabelDto;
 import ro.info.uaic.movierecommendation.dtoresponses.movies.MovieDto;
 import ro.info.uaic.movierecommendation.exceptions.MovieNotFoundException;
 import ro.info.uaic.movierecommendation.models.movies.Movie;
@@ -33,14 +40,26 @@ public class MovieService {
     @Autowired
     private ModelMapper mapper;
 
-    public List<MovieDto> findAll(Pageable paging) throws MovieNotFoundException{
+    public List<MovieDto> findAll(Pageable paging) throws MovieNotFoundException {
 
-        List<MovieDto> movieDtoList = repositoryMovie.findAll(paging).getContent()
-                .stream().filter(movie -> !movie.isDeleted())
-                .map(movie -> modelMapper.map(movie, MovieDto.class))
+        List<MovieDto> movieDtoList = repositoryMovie.findAll(paging).getContent().stream()
+                .filter(movie -> !movie.isDeleted()).map(movie -> modelMapper.map(movie, MovieDto.class))
                 .collect(Collectors.toList());
 
-        if(movieDtoList.isEmpty()){
+        if (movieDtoList.isEmpty()) {
+            throw new MovieNotFoundException(Movie.class, "without parameters", "");
+        }
+        return movieDtoList;
+    }
+
+    public List<MovieDto> findMostVoted(Pageable paging, int numberTop) throws MovieNotFoundException {
+
+        List<MovieDto> movieDtoList = repositoryMovie.findAll(paging).getContent().stream()
+                .filter(movie -> !movie.isDeleted()).map(movie -> modelMapper.map(movie, MovieDto.class))
+                .sorted((Comparator.comparingDouble(MovieDto::getVoteAverage).reversed())).limit(numberTop)
+                .collect(Collectors.toList());
+
+        if (movieDtoList.isEmpty()) {
             throw new MovieNotFoundException(Movie.class, "without parameters", "");
         }
         return movieDtoList;
@@ -48,12 +67,11 @@ public class MovieService {
 
     public List<MovieDto> findByName(String name, Pageable paging) throws MovieNotFoundException {
 
-        List<MovieDto> movieDtoList = repositoryMovie.findByName(name, paging).getContent()
-                .stream().filter(movie -> !movie.isDeleted())
-                .map(movie -> modelMapper.map(movie, MovieDto.class))
+        List<MovieDto> movieDtoList = repositoryMovie.findByName(name, paging).getContent().stream()
+                .filter(movie -> !movie.isDeleted()).map(movie -> modelMapper.map(movie, MovieDto.class))
                 .collect(Collectors.toList());
 
-        if(movieDtoList.isEmpty()){
+        if (movieDtoList.isEmpty()) {
             throw new MovieNotFoundException(Movie.class, "name", name);
         }
         return movieDtoList;
@@ -61,11 +79,12 @@ public class MovieService {
 
     public List<MovieDto> findByType(List<Type> type, Pageable paging) {
 
-        List<MovieDto> movieDtoList = repositoryMovie.findByTypeIn(repositoryType.findByTypeIn(type), paging).getContent()
-                .stream().filter(movie -> !movie.isDeleted())
+        List<MovieDto> movieDtoList = repositoryMovie.findByTypeIn(repositoryType.findByTypeIn(type), paging)
+                .getContent().stream().filter(movie -> !movie.isDeleted())
                 .map(movie -> modelMapper.map(movie, MovieDto.class))
                 .collect(Collectors.toList());
-        if(movieDtoList.isEmpty()){
+
+        if (movieDtoList.isEmpty()) {
             throw new MovieNotFoundException(Movie.class, "type/types", type.toString());
         }
         return movieDtoList;
@@ -73,11 +92,12 @@ public class MovieService {
 
     public List<MovieDto> findByActor(List<String> actorName, Pageable paging) throws MovieNotFoundException {
 
-        List<MovieDto> movieDtoList = repositoryMovie.findByActorsIn(repositoryActor.findByNameIn(actorName), paging).getContent()
-                .stream().filter(movie -> !movie.isDeleted())
+        List<MovieDto> movieDtoList = repositoryMovie.findByActorsIn(repositoryActor.findByNameIn(actorName), paging)
+                .getContent().stream().filter(movie -> !movie.isDeleted())
                 .map(movie -> modelMapper.map(movie, MovieDto.class))
                 .collect(Collectors.toList());
-        if(movieDtoList.isEmpty()){
+
+        if (movieDtoList.isEmpty()) {
             throw new MovieNotFoundException(Movie.class, "actor/actors", actorName.toString());
         }
         return movieDtoList;
@@ -85,7 +105,13 @@ public class MovieService {
     }
 
     public Optional<Movie> getMovieById(Long id) {
-        return repositoryMovie.findById(id);
+        if (repositoryMovie.existsById(id)) {
+            if (!repositoryMovie.getById(id).isDeleted()) {
+                return repositoryMovie.findById(id);
+            }
+        }
+        return repositoryMovie.findById(0L);
+
     }
 
     public MovieDto createMovie(MovieDto newMovie) {
@@ -99,8 +125,7 @@ public class MovieService {
 
     public boolean deleteMovie(Movie foundMovie) {
 
-        if (!repositoryMovie.existsById(foundMovie.getId()))
-            return false;
+        if (!repositoryMovie.existsById(foundMovie.getId())) return false;
 
         foundMovie.setDeleted(true);
         repositoryMovie.save(foundMovie);
@@ -110,11 +135,9 @@ public class MovieService {
 
     public MovieDto updateMovie(Movie movie) {
 
-        if (!repositoryMovie.existsById(movie.getId()))
-            throw new MovieNotFoundException(Movie.class, "id");
+        if (!repositoryMovie.existsById(movie.getId())) throw new MovieNotFoundException(Movie.class, "id");
 
-        if (movie.isDeleted())
-            throw new MovieNotFoundException(Movie.class, "id");
+        if (movie.isDeleted()) throw new MovieNotFoundException(Movie.class, "id");
 
         repositoryMovie.save(movie);
         MovieDto updatedMovie = mapper.map(movie, MovieDto.class);
@@ -122,6 +145,55 @@ public class MovieService {
     }
 
 
+    public Boolean getSinglePrediction(UserMovieLabelDto userMovieLabelDto) {
+        JSONObject jsonObject = new JSONObject();
+      
+        jsonObject.put("userId", userMovieLabelDto.getUserId());
+        jsonObject.put("movieId", userMovieLabelDto.getMovieId());
+        jsonObject.put("label", userMovieLabelDto.getLabel());
 
+        String URL = "https://mlmoduleapi.azurewebsites.net/Recommendations/singlePrediction";
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
+        HttpEntity<String> request = new HttpEntity<>(jsonObject.toString(), headers);
+
+        JSONObject resultJson = restTemplate.postForObject(URL, request, JSONObject.class);
+        if (resultJson == null) {
+            throw new RuntimeException("No result");
+        }
+
+        return (Boolean) resultJson.get("predictionLabel");
+    }
+
+    public List<MovieDto> getPredictions(Integer noOfPredictions, List<UserMovieLabelDto> userMovieLabelList) {
+        JSONArray jsonArray = new JSONArray(userMovieLabelList);
+        List<MovieDto> moviesToReturn = new ArrayList<>();
+
+        String URL = "https://mlmoduleapi.azurewebsites.net/Recommendations/predictions/" + noOfPredictions;
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<String> request = new HttpEntity<>(jsonArray.toString(), headers);
+
+        Object[] resultJson = restTemplate.postForObject(URL, request, Object[].class);
+
+        if (resultJson == null) {
+            throw new RuntimeException("No result");
+        }
+
+        for (Object object : resultJson) {
+            Long currMovieId = Long.parseLong(object.toString());
+            Optional<Movie> currMovieOpt = repositoryMovie.findById(currMovieId);
+
+            if (currMovieOpt.isPresent()) {
+                MovieDto currMovieDto = mapper.map(currMovieOpt.get(), MovieDto.class);
+                moviesToReturn.add(currMovieDto);
+            }
+        }
+
+        return moviesToReturn;
+    }
 }
