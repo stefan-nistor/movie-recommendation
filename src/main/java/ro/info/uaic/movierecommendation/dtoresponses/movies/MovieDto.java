@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class MovieDto {
 
+    private Long id;
     @NotNull
     private String name;
     @NotNull
