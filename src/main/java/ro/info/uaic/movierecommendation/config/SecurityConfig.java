@@ -42,13 +42,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(new AuthEntryPoint());
         http.authorizeRequests().antMatchers("/health").permitAll();
-        http.authorizeRequests().antMatchers("/api/v1/movies").permitAll();
-        http.authorizeRequests().antMatchers("/api/v1/movies/names").permitAll();
-        http.authorizeRequests().antMatchers("/api/v1/movies/types").permitAll();
-        http.authorizeRequests().antMatchers("/api/v1/movies/actors").permitAll();
-        http.authorizeRequests().antMatchers("/api/v1/movies/create").permitAll();
-        http.authorizeRequests().antMatchers("/api/v1/movies/{id}").permitAll();
-        http.authorizeRequests().antMatchers("/api/v1/movies/top/{id}").permitAll();
         http.authorizeRequests().antMatchers("/swagger-ui/index.html").permitAll();
         http.authorizeRequests().antMatchers("/swagger-ui/*", "/swagger-ui.html", "/webjars/**", "/v2/**", "/swagger-resources/**").permitAll();
         http.authorizeRequests().antMatchers("/api/v1/login").permitAll();
