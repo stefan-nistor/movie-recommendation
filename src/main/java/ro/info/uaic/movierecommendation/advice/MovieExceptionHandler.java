@@ -17,6 +17,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ro.info.uaic.movierecommendation.apierror.ApiError;
 import ro.info.uaic.movierecommendation.exceptions.MovieNotFoundException;
+import ro.info.uaic.movierecommendation.exceptions.RatingNotFoundException;
 
 import javax.validation.ConstraintViolationException;
 
@@ -31,6 +32,14 @@ public class MovieExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(MovieNotFoundException.class)
     protected ResponseEntity<Object> handleEntityNotFound(
             MovieNotFoundException ex) {
+        ApiError apiError = new ApiError(NOT_FOUND);
+        apiError.setMessage(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(RatingNotFoundException.class)
+    protected ResponseEntity<Object> handleEntityNotFound(
+            RatingNotFoundException ex) {
         ApiError apiError = new ApiError(NOT_FOUND);
         apiError.setMessage(ex.getMessage());
         return buildResponseEntity(apiError);

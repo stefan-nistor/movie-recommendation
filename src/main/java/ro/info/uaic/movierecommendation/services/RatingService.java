@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ro.info.uaic.movierecommendation.dtoresponses.UserMovieLabelDto;
 import ro.info.uaic.movierecommendation.entites.UserMovieLabel;
-import ro.info.uaic.movierecommendation.exceptions.MovieNotFoundException;
+import ro.info.uaic.movierecommendation.exceptions.RatingNotFoundException;
 import ro.info.uaic.movierecommendation.repos.RatingRepository;
 
 import java.util.List;
@@ -26,13 +26,12 @@ public class RatingService {
                 .collect(Collectors.toList());
     }
 
-    public UserMovieLabel findByIds(UserMovieLabelDto userMovieLabelDto) {
+    public UserMovieLabel findByIds(UserMovieLabelDto userMovieLabelDto) throws RatingNotFoundException {
         Optional<UserMovieLabel> userMovieLabel = ratingRepo.findByUserIdAndMovieId(
                 userMovieLabelDto.getUserId(), userMovieLabelDto.getMovieId());
 
-        System.out.println("JEREERE " + userMovieLabel.get());
         if (userMovieLabel.isEmpty()) {
-            throw new MovieNotFoundException(UserMovieLabel.class, "id");
+            throw new RatingNotFoundException(UserMovieLabel.class, "movie/user_id");
         }
 
         return userMovieLabel.get();
