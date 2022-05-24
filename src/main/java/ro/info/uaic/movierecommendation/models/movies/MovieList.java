@@ -1,15 +1,16 @@
-package ro.info.uaic.movierecommendation.models.lists;
+package ro.info.uaic.movierecommendation.models.movies;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
+import ro.info.uaic.movierecommendation.entites.UserEntity;
 import ro.info.uaic.movierecommendation.models.movies.Movie;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.UUID;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "lists")
 public class MovieList {
@@ -18,8 +19,14 @@ public class MovieList {
     private Long id;
     private String name;
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "movielist_movie", joinColumns = @JoinColumn(name = "id_list"), inverseJoinColumns = @JoinColumn(name = "id_movie"))
+    @JoinTable(name = "movielist_movie",
+            joinColumns = @JoinColumn(name = "id_list"),
+            inverseJoinColumns = @JoinColumn(name = "id_movie"))
     private List<Movie> movies;
+
+    @ManyToOne
+    @JoinColumn(name="id_user")
+    private UserEntity user;
 
     @Override
     public String toString() {
