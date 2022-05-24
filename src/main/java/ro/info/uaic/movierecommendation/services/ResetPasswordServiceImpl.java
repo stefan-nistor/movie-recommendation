@@ -32,7 +32,7 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
     private BCryptPasswordEncoder passwordEncoder;
 
     @Override
-    public void sendTokenToEmail(String email) throws UserNotFoundException {
+    public void sendTokenToEmail(String email) {
         var user = userRepo.findByEmail(email);
         if (user.isEmpty()) {
             throw new UserNotFoundException("No such user with given email");
@@ -48,9 +48,7 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
     }
 
     @Override
-    public void resetPassword(PasswordDTO password) throws InvalidPasswordException {
-
-        //TODO Verify if token matches userToken
+    public void resetPassword(PasswordDTO password) {
 
         /**
          * The password is at least 6 characters long (?=.{8,}).
@@ -74,6 +72,7 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
         var user = userRepo.findByPasswordToken(password.getResetToken());
         UserEntity userEntity = user.get();
         userEntity.setPassword(passwordEncoder.encode(password.getNewPassword()));
+        userEntity.setPasswordToken(null);
         userRepo.save(userEntity);
     }
 

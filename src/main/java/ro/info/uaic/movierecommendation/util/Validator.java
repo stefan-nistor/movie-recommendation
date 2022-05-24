@@ -11,5 +11,4 @@ public class Validator {
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);
         return matcher.find();
     }
-
 }
