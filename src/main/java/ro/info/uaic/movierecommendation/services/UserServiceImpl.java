@@ -6,11 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ro.info.uaic.movierecommendation.dtoresponses.UserDTO;
+import ro.info.uaic.movierecommendation.dtoresponses.UserObj;
 import ro.info.uaic.movierecommendation.entites.UserEntity;
 import ro.info.uaic.movierecommendation.exceptions.EmailFormatException;
 import ro.info.uaic.movierecommendation.exceptions.UserException;
 import ro.info.uaic.movierecommendation.repos.UserRepo;
 import ro.info.uaic.movierecommendation.util.Validator;
+
+import java.util.Base64;
+import java.util.Optional;
 
 @Data
 @Service
@@ -38,5 +42,22 @@ public class UserServiceImpl implements UserService {
 
         userRepo.save(userFromDb);
         return user;
+    }
+
+    @Override
+    public UserObj getUserForToken(String token) {
+        String[] chunks = token.split("\\.");
+
+        Base64.Decoder decoder = Base64.getUrlDecoder();
+        String payload = new String(decoder.decode(chunks[1]));
+
+        int index = payload.indexOf("sub");
+        String tempStr = payload.substring(index + "sub".length() + 3);
+        index = tempStr.indexOf("\"");
+        tempStr = tempStr.substring(0, index);
+
+        Optional<UserEntity> user = userRepo.findByUsername(tempStr);
+
+        return mapper.map(user, UserObj.class);
     }
 }
