@@ -9,6 +9,8 @@ import ro.info.uaic.movierecommendation.dtoresponses.UserDTO;
 import ro.info.uaic.movierecommendation.dtoresponses.UserObj;
 import ro.info.uaic.movierecommendation.services.UserService;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
