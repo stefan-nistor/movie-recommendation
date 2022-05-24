@@ -1,4 +1,4 @@
-package ro.info.uaic.movierecommendation.advice;
+package ro.info.uaic.movierecommendation.handlers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
@@ -13,8 +13,6 @@ import ro.info.uaic.movierecommendation.exceptions.MovieAlreadyInListException;
 import ro.info.uaic.movierecommendation.exceptions.MovieListAlreadyExistsException;
 import ro.info.uaic.movierecommendation.exceptions.MovieListNotFoundException;
 import ro.info.uaic.movierecommendation.exceptions.MovieNotInListException;
-
-import javax.swing.text.html.parser.Entity;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice

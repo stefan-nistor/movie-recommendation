@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -18,7 +19,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import ro.info.uaic.movierecommendation.filters.AuthEntryPoint;
 import ro.info.uaic.movierecommendation.filters.AuthenticationFilter;
 import ro.info.uaic.movierecommendation.filters.CustomAuthorizationFilter;
+import ro.info.uaic.movierecommendation.handlers.GoogleAuthenticationSuccessHandler;
 import ro.info.uaic.movierecommendation.services.UserDetailsServiceImpl;
+import ro.info.uaic.movierecommendation.services.UserService;
 
 @Configuration
 @EnableWebSecurity
@@ -26,11 +29,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsServiceImpl userDetailsService;
     private final CustomAuthorizationFilter customAuthorizationFilter;
+    private final UserService userService;
 
     @Autowired
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService, CustomAuthorizationFilter customAuthorizationFilter) {
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService, CustomAuthorizationFilter customAuthorizationFilter, UserService userService) {
         this.userDetailsService = userDetailsService;
         this.customAuthorizationFilter = customAuthorizationFilter;
+        this.userService = userService;
     }
 
     @Override
@@ -47,6 +52,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/api/v1/login").permitAll();
         http.authorizeRequests().antMatchers("/api/v1/reset-password", "/api/v1/reset-password/**").permitAll();
         http.authorizeRequests().antMatchers("/api/v1/users").permitAll();
+        http.authorizeRequests().antMatchers("/oauth2/**", "/auth/**").permitAll();
+
+//
+//        http.authorizeRequests().anyRequest().authenticated()
+//                        .and().oauth2Login()
+//                        .authorizationEndpoint().baseUri("/oauth2/authorize")
+//                        .and().successHandler(authenticationSuccessHandler());
 
         http.authorizeRequests().anyRequest().authenticated()
                 .and()
@@ -75,5 +87,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+        return new GoogleAuthenticationSuccessHandler(userService);
     }
 }
