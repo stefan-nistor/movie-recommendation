@@ -22,7 +22,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     public static final String SECRET = "SECRET_KEY";
-    public static final long EXPIRATION_TIME = 900_000; // 15 mins
+    public static final long EXPIRATION_TIME = 3 * 60 * 60 * 1000; // 3h
 
     @Autowired
     public AuthenticationFilter(AuthenticationManager authenticationManager) {
