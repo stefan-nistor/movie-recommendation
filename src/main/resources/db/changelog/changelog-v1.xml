@@ -20,4 +20,10 @@
     <changeSet id="4" author="Paul513607">
         <sqlFile path="db/changelog/scripts/MR-5_alter_movie_table.sql"/>
     </changeSet>
+
+    <changeSet id="5" author="Fechita Antonio">
+        <sqlFile path="db/changelog/scripts/MR-6_alter_comments_table.sql"/>
+    </changeSet>
+
+
 </databaseChangeLog>
