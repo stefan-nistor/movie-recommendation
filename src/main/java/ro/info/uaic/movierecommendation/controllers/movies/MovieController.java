@@ -140,14 +140,14 @@ public class MovieController {
         return new ResponseEntity<>(updatedMovie, new HttpHeaders(), HttpStatus.RESET_CONTENT);
     }
 
-    @GetMapping(value = "/singlePrediction", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/singlePrediction", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Boolean> getSinglePrediction(@RequestBody UserMovieLabelDto userMovieLabelDto) {
         Boolean predictedLevel = service.getSinglePrediction(userMovieLabelDto);
 
         return new ResponseEntity<>(predictedLevel, new HttpHeaders(), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/predictions/{noOfPredictions}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/predictions/{noOfPredictions}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MovieDto>> getPredictions(@PathVariable Integer noOfPredictions,
                                                          @RequestBody List<UserMovieLabelDto> userMovieLabelDtoList) {
         List<MovieDto> movieList = service.getPredictions(noOfPredictions, userMovieLabelDtoList);
