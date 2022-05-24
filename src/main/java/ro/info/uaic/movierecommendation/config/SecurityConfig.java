@@ -46,7 +46,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/swagger-ui/*", "/swagger-ui.html", "/webjars/**", "/v2/**", "/swagger-resources/**").permitAll();
         http.authorizeRequests().antMatchers("/api/v1/login").permitAll();
         http.authorizeRequests().antMatchers("/api/v1/reset-password", "/api/v1/reset-password/**").permitAll();
-        http.authorizeRequests().antMatchers("/api/v1/users").permitAll().anyRequest().authenticated()
+        http.authorizeRequests().antMatchers("/api/v1/users").permitAll();
+
+        http.authorizeRequests().anyRequest().authenticated()
                 .and()
                 .addFilter(new AuthenticationFilter(authenticationManager()))
                 .addFilterBefore(customAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
