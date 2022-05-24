@@ -1,0 +1,2 @@
+--ALTER TABLE comments
+--  ALTER COLUMN content TYPE text USING content::TEXT;
