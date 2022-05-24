@@ -58,6 +58,9 @@ public class MovieListService {
     }
 
     public MovieListDTO addMovieToList(MovieDto movieDTO, MovieListDTO movieListDTO) {
+        if(movieListDTO==null) {
+            throw new MovieListNotFoundException(MovieList.class, "without parameters");
+        }
         MovieList movieList = modelMapper.map(repositoryList.findByUserAndName(movieListDTO.getUser(),movieListDTO.getName()),
                 MovieList.class);
         Movie movie = modelMapper
