@@ -6,14 +6,18 @@ import org.springframework.stereotype.Service;
 import ro.info.uaic.movierecommendation.dtoresponses.CommentDTO;
 import ro.info.uaic.movierecommendation.entites.Comment;
 import ro.info.uaic.movierecommendation.entites.UserEntity;
+import ro.info.uaic.movierecommendation.exceptions.MovieNotFoundException;
 import ro.info.uaic.movierecommendation.exceptions.UserException;
+import ro.info.uaic.movierecommendation.exceptions.UserNotFoundException;
 import ro.info.uaic.movierecommendation.models.movies.Movie;
 import ro.info.uaic.movierecommendation.repos.CommentRepository;
 import ro.info.uaic.movierecommendation.repos.UserRepo;
 import ro.info.uaic.movierecommendation.repositories.movies.MovieRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentsService {
@@ -30,15 +34,19 @@ public class CommentsService {
     private MovieRepository movieRepository;
 
     public CommentDTO saveNewComment(CommentDTO comment) throws UserException {
+        Optional<Movie> movie = movieRepository.findById(comment.getMovieId());
+        Optional<UserEntity> user = userRepo.findById(comment.getUserId());
+
+        if(movie.isEmpty()) {
+            throw new MovieNotFoundException(Movie.class, "id");
+        }
+        if(user.isEmpty()) {
+            throw new UserNotFoundException("User not found for this id.");
+        }
+
         Comment comment1 = new Comment();
-
-        if(!userRepo.existsById(comment.getId_user()))
-            return null;
-
-        if(!movieRepository.existsById(comment.getId_movie()))
-            return null;
-        comment1.setUser(userRepo.findById(comment.getId_user()).get());
-        comment1.setMovie(movieRepository.findById(comment.getId_movie()).get());
+        comment1.setUser(userRepo.findById(comment.getUserId()).get());
+        comment1.setMovie(movieRepository.findById(comment.getMovieId()).get());
         comment1.setContent(comment.getContent());
         commentRepository.save(comment1);
         return comment;
@@ -57,8 +65,8 @@ public class CommentsService {
 
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setId(commentToUpdate.get().getId());
-        commentDTO.setId_user(commentToUpdate.get().getUser().getId());
-        commentDTO.setId_movie(commentToUpdate.get().getMovie().getId());
+        commentDTO.setUserId(commentToUpdate.get().getUser().getId());
+        commentDTO.setMovieId(commentToUpdate.get().getMovie().getId());
         commentDTO.setContent(commentDTO.getContent());
         return commentDTO;
     }
@@ -71,25 +79,34 @@ public class CommentsService {
         commentRepository.deleteById(id);
     }
 
-    public List<Comment> getCommentsByMovieId(Long movieId){
+    public List<CommentDTO> getCommentsByMovieId(Long movieId){
         Optional<Movie> movie = movieRepository.findById(movieId);
 
-        if(movie.isEmpty())
-            return null; //to add an exception
+        if(movie.isEmpty()) {
+            throw new MovieNotFoundException(Movie.class, "id");
+        }
 
-            return commentRepository.findByMovie(movie.get());
+        List<Comment> comments = commentRepository.findByMovie(movie.get());
+        List<CommentDTO> commentDtos = comments.stream()
+                .map(comment -> new CommentDTO(comment.getId(), comment.getMovie().getId(),
+                        comment.getUser().getId(), comment.getContent())).toList();
+        return commentDtos;
     }
 
-    public List<Comment> getCommentsByMovieIdAndUserId(Long movieId, Long userId){
+    public List<CommentDTO> getCommentsByMovieIdAndUserId(Long movieId, Long userId){
         Optional<Movie> movie = movieRepository.findById(movieId);
         Optional<UserEntity> user = userRepo.findById(userId);
 
-        if(movie.isEmpty())
-            return null; //to add an exception
+        if(movie.isEmpty()) {
+            throw new MovieNotFoundException(Movie.class, "id");
+        }
+        if(user.isEmpty()) {
+            throw new UserNotFoundException("User not found for this id.");
+        }
 
-        if(user.isEmpty())
-            return null; //to add another exception
-
-        return commentRepository.findByMovie(movie.get());
+        List<Comment> comments = commentRepository.findByUserAndMovie(user.get(), movie.get());
+        return comments.stream()
+                .map(comment -> new CommentDTO(comment.getId(), comment.getMovie().getId(),
+                        comment.getUser().getId(), comment.getContent())).toList();
     }
 }

@@ -52,6 +52,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserObj getUserForToken(String token) {
+        token = token.split(" ")[1];
         String[] chunks = token.split("\\.");
 
         Base64.Decoder decoder = Base64.getUrlDecoder();
@@ -88,6 +89,50 @@ public class UserServiceImpl implements UserService {
     public UserDTO findUserByResetToken(String token) {
         var result = userRepo.findByPasswordToken(token).orElseThrow(() ->  new UserNotFoundException("user not found"));
         return mapper.map(result, UserDTO.class);
+    }
+
+    @Override
+    public UserObj getUserById(Long id) {
+        Optional<UserEntity> user = userRepo.findById(id);
+        if (user.isEmpty()) {
+            throw new UserNotFoundException("User not found for this id.");
+        }
+
+        return mapper.map(user, UserObj.class);
+    }
+
+    @Override
+    public UserObj updateUserForBody(Long id, UserDTO userDTO) {
+        if (!userRepo.existsById(id)) {
+            throw new UserNotFoundException("User not found for this id.");
+        }
+        UserEntity user = userRepo.getById(id);
+        userDTO.setId(id);
+        if (userDTO.getUsername() != null) {
+            user.setUsername(userDTO.getUsername());
+        }
+        if (userDTO.getEmail() != null) {
+            user.setEmail(userDTO.getEmail());
+        }
+        if (userDTO.getFirstname() != null) {
+            user.setFirstname(userDTO.getFirstname());
+        }
+        if (userDTO.getLastname() != null) {
+            user.setLastname(userDTO.getLastname());
+        }
+
+        userRepo.save(user);
+
+        return mapper.map(userDTO, UserObj.class);
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        Optional<UserEntity> user = userRepo.findById(id);
+        if (user.isEmpty()) {
+            throw new UserNotFoundException("User not found for this id.");
+        }
+        userRepo.delete(user.get());
     }
 
 }

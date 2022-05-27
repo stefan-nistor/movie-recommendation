@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.modelmapper.ModelMapper;
+import ro.info.uaic.movierecommendation.dtoresponses.UserObj;
 import ro.info.uaic.movierecommendation.dtoresponses.movies.MovieListDTO;
 import ro.info.uaic.movierecommendation.dtoresponses.movies.MovieDto;
 import ro.info.uaic.movierecommendation.entites.UserEntity;
@@ -24,17 +25,18 @@ public class MovieListService {
     private ModelMapper modelMapper;
 
     @Autowired
-    private MovieRepository repositoryMovie;
+    private MovieRepository movieRepo;
 
     @Autowired
-    private MovieListRepository repositoryList;
+    private MovieListRepository listRepo;
 
     @Autowired
     private UserRepo userRepo;
 
+    @Deprecated
     public List<MovieListDTO> findAll()  {
 
-        List<MovieListDTO> movieListDTOList = repositoryList.findAll().stream()
+        List<MovieListDTO> movieListDTOList = listRepo.findAll().stream()
                 .map(movieList -> modelMapper.map(movieList, MovieListDTO.class))
                 .collect(Collectors.toList());
         if (movieListDTOList.isEmpty()) {
@@ -44,8 +46,9 @@ public class MovieListService {
         return movieListDTOList;
     }
 
+    @Deprecated
     public MovieListDTO findByName(String name) {
-        MovieListDTO movieListDTO = modelMapper.map(repositoryList.findByName(name), MovieListDTO.class);
+        MovieListDTO movieListDTO = modelMapper.map(listRepo.findByName(name), MovieListDTO.class);
         if (movieListDTO == null) {
             throw new MovieListNotFoundException(MovieList.class, "name", name);
         }
@@ -53,35 +56,51 @@ public class MovieListService {
     }
 
     public MovieListDTO findByID(Long movieListID) {
-        MovieListDTO movieListDTO = modelMapper.map(repositoryList.findById(movieListID), MovieListDTO.class);
+        MovieListDTO movieListDTO = modelMapper.map(listRepo.findById(movieListID), MovieListDTO.class);
         return movieListDTO;
     }
 
     public MovieListDTO addMovieToList(MovieDto movieDTO, MovieListDTO movieListDTO) {
-        if(movieListDTO==null) {
+
+        if(movieListDTO == null) {
             throw new MovieListNotFoundException(MovieList.class, "without parameters");
         }
-        MovieList movieList = modelMapper.map(repositoryList.findByUserAndName(movieListDTO.getUser(),movieListDTO.getName()),
+        Optional<UserEntity> user = userRepo.findByUsername(movieListDTO.getUser().getUsername());
+        if (user.isEmpty()) {
+            throw new UserNotFoundException("User not found for name.");
+        }
+
+        if (listRepo.findByUser(user.get()).size() >= 1) {
+            return null;
+        }
+
+        MovieList movieList = modelMapper.map(listRepo.findByUserAndName(user.get(),movieListDTO.getName()),
                 MovieList.class);
         Movie movie = modelMapper
-                .map((repositoryMovie.findByName(movieDTO.getName(), Pageable.unpaged()))
+                .map((movieRepo.findByName(movieDTO.getName(), Pageable.unpaged()))
                         .getContent().get(0), Movie.class);
         if (movieList.getMovies().contains(movie)) {
             throw new MovieAlreadyInListException(MovieList.class, "Movie Name", movie.getName(),
                     "MovieList Name", movieList.getName());
         }
+
         movieList.getMovies().add(movie);
         MovieListDTO movieListDTOResult = modelMapper
-                .map(repositoryList.findById(movieList.getId()), MovieListDTO.class);
-        repositoryList.save(movieList);
+                .map(listRepo.findById(movieList.getId()), MovieListDTO.class);
+        listRepo.save(movieList);
         return movieListDTOResult;
     }
 
     public MovieListDTO removeMovieToList(MovieDto movieDTO, MovieListDTO movieListDTO) {
-        MovieList movieList = modelMapper.map(repositoryList.findByUserAndName(movieListDTO.getUser(), movieListDTO.getName()),
+        Optional<UserEntity> user = userRepo.findByUsername(movieListDTO.getUser().getUsername());
+        if (user.isEmpty()) {
+            throw new UserNotFoundException("User not found for name.");
+        }
+
+        MovieList movieList = modelMapper.map(listRepo.findByUserAndName(user.get(), movieListDTO.getName()),
                 MovieList.class);
         Movie movie = modelMapper
-                .map((repositoryMovie.findByName(movieDTO.getName(), Pageable.unpaged()))
+                .map((movieRepo.findByName(movieDTO.getName(), Pageable.unpaged()))
                         .getContent().get(0), Movie.class);
         if (!movieList.getMovies().contains(movie)) {
             throw new MovieNotInListException(MovieList.class, "Movie Name", movie.getName(),
@@ -89,38 +108,55 @@ public class MovieListService {
         }
         movieList.getMovies().remove(movie);
         MovieListDTO movieListDTOResult = modelMapper
-                .map(repositoryList.findById(movieList.getId()), MovieListDTO.class);
-        repositoryList.save(movieList);
+                .map(listRepo.findById(movieList.getId()), MovieListDTO.class);
+        listRepo.save(movieList);
         return movieListDTOResult;
     }
 
     public MovieListDTO create(String movieListName, Long userId) throws UserNotFoundException {
-        if(!userRepo.existsById(userId)){
+        Optional<UserEntity> user = userRepo.findById(userId);
+
+        if(user.isEmpty()){
             throw new UserNotFoundException("No user for this id");
         }
-        if (repositoryList.findByName(movieListName).isPresent()) {
+        if (listRepo.findByName(movieListName).isPresent()) {
             throw new MovieListAlreadyExistsException(MovieList.class, "MovieList Name", movieListName);
         }
+        MovieList movieList = new MovieList();
+        movieList.setName(movieListName);
+        movieList.setUser(user.get());
+        listRepo.save(movieList);
+
         MovieListDTO movieListDTO = new MovieListDTO();
-        movieListDTO.setName(movieListName);
-        movieListDTO.setUser(modelMapper.map(userRepo.findById(userId),UserEntity.class));
-        repositoryList.save(modelMapper.map(movieListDTO, MovieList.class));
+        UserObj userObj = modelMapper.map(movieList.getUser(), UserObj.class);
+        movieListDTO.setMovies(movieList.getMovies());
+        movieListDTO.setUser(userObj);
+        movieListDTO.setName(movieList.getName());
         return movieListDTO;
     }
 
     public void delete(MovieListDTO movieListDTO) {
-        Optional<MovieList> movieList = repositoryList.findByUserAndName(movieListDTO.getUser(), movieListDTO.getName());
+        Optional<UserEntity> user = userRepo.findByUsername(movieListDTO.getUser().getUsername());
+        if (user.isEmpty()) {
+            throw new UserNotFoundException("User not found for name.");
+        }
+
+        Optional<MovieList> movieList = listRepo.findByUserAndName(user.get(), movieListDTO.getName());
         if(movieList.isEmpty()){
             throw new MovieListNotFoundException(MovieList.class,"user + name");
         }
-        repositoryList.delete(movieList.get());
+        listRepo.delete(movieList.get());
     }
 
     public List<MovieListDTO> findUserLists(Long userId) {
-        List<MovieListDTO> movieListDTOList = repositoryList.findByUser(modelMapper.map(userRepo.findById(userId),UserEntity.class)).stream()
+        Optional<UserEntity> user = userRepo.findById(userId);
+        if (user.isEmpty()) {
+            throw new UserNotFoundException("User not found for name.");
+        }
+
+        return listRepo.findByUser(user.get()).stream()
                 .map(movieList -> modelMapper.map(movieList, MovieListDTO.class))
                 .collect(Collectors.toList());
-        return movieListDTOList;
     }
 
     public MovieListDTO findListOfUser(Long userId, String name) throws UserNotFoundException {
@@ -128,7 +164,8 @@ public class MovieListService {
         if(user.isEmpty()){
             throw new UserNotFoundException("No user for this id");
         }
-        Optional<MovieList> movieList = repositoryList.findByUserAndName(user.get(),name);
+
+        Optional<MovieList> movieList = listRepo.findByUserAndName(user.get(),name);
         if(movieList.isEmpty()){
             throw new MovieListNotFoundException(MovieList.class,"user + name");
         }

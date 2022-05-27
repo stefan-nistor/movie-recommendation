@@ -18,4 +18,6 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     Page<Movie> findByName(String name, Pageable paging);
     Page<Movie> findByTypeIn(List<MovieType> type, Pageable paging);
     Page<Movie> findByActorsIn(List<Actor> actor, Pageable paging);
+    List<Movie> findByTypeIn(List<MovieType> types);
+    Long countByIsDeleted(Boolean isDeleted);
 }

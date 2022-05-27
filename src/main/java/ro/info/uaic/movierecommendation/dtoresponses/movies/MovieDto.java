@@ -27,6 +27,7 @@ public class MovieDto {
     private String writer;
     private boolean hasCaptions;
     private Date releaseDate;
+    private boolean isDeleted;
 
     // Images
     private Integer imdbId;

@@ -1,7 +1,6 @@
 package ro.info.uaic.movierecommendation.exceptions;
 
 import org.springframework.util.StringUtils;
-import ro.info.uaic.movierecommendation.entites.UserMovieLabel;
 
 import java.util.HashMap;
 import java.util.Map;

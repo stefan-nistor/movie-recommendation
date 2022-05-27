@@ -13,5 +13,8 @@ public interface UserService {
     UserObj getUserForToken(String token);
     void saveOauth2User(OAuth2User user);
     UserDTO findUserByResetToken(String token);
+    UserObj getUserById(Long id);
+    UserObj updateUserForBody(Long id, UserDTO userDTO);
+    void deleteUser(Long id);
 //    UserDTO getPrincipalDetails();
 }

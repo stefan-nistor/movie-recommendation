@@ -1,10 +1,11 @@
 package ro.info.uaic.movierecommendation.models.movies;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
 import javax.persistence.*;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class MovieType {
 
@@ -19,8 +20,6 @@ public class MovieType {
     @SequenceGenerator(name="type_generator", sequenceName = "type_seq", allocationSize=1)
     private Type type;
 
-
-    public MovieType(){}
     public MovieType(Type type) {
         this.type = type;
     }

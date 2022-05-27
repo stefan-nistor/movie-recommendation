@@ -1,6 +1,7 @@
 package ro.info.uaic.movierecommendation.dtoresponses;
 
 import lombok.*;
+import ro.info.uaic.movierecommendation.dtoresponses.movies.MovieDto;
 
 @Data
 @Builder
@@ -10,7 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 public class CommentDTO {
     private Long id;
-    private Long id_movie;
-    private Long id_user;
+    private Long movieId;
+    private Long userId;
     private String content;
 }

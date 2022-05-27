@@ -108,6 +108,4 @@ public class TestingMovieManagement {
                 response.getHeader(HttpHeaders.LOCATION));
 
     }
-
-
 }
