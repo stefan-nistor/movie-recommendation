@@ -38,7 +38,7 @@ public class RatingController {
 
 
     @GetMapping
-    public ResponseEntity<UserMovieRating> getRating(@RequestBody UserMovieRatingDto userMovieRatingDto)
+    public ResponseEntity<?> getRating(@RequestBody UserMovieRatingDto userMovieRatingDto)
             throws RatingNotFoundException {
         return ResponseEntity.ok().body(ratingService.findByIds(userMovieRatingDto));
     }

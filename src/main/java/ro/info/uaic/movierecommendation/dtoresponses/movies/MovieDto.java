@@ -22,7 +22,7 @@ public class MovieDto {
     @NotNull
     private List<MovieType> type;
     @NotNull
-    private String duration;
+    private Long duration;
     private String director;
     private String writer;
     private boolean hasCaptions;

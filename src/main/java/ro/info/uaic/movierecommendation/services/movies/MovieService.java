@@ -133,14 +133,13 @@ public class MovieService {
         return movieDtoList;
     }
 
-    public Optional<Movie> getMovieById(Long id) {
-        if (movieRepo.existsById(id)) {
-            if (!movieRepo.getById(id).isDeleted()) {
-                return movieRepo.findById(id);
-            }
+    public MovieDto getMovieById(Long id) {
+        Optional<Movie> movie = movieRepo.findById(id);
+        if (movie.isEmpty() || movie.get().isDeleted()) {
+            throw new MovieNotFoundException(Movie.class, "id");
         }
-        return movieRepo.findById(0L);
 
+        return mapper.map(movie.get(), MovieDto.class);
     }
 
     public MovieDto createMovie(MovieDto newMovie) {
@@ -152,25 +151,43 @@ public class MovieService {
         return newMovie;
     }
 
-    public boolean deleteMovie(Movie foundMovie) {
+    public boolean deleteMovie(Long movieId) {
+        Optional<Movie> movie = movieRepo.findById(movieId);
 
-        if (!movieRepo.existsById(foundMovie.getId())) return false;
+        if (movie.isEmpty()) {
+            throw new MovieNotFoundException(Movie.class, "id");
+        }
 
-        foundMovie.setDeleted(true);
-        movieRepo.save(foundMovie);
+        movie.get().setDeleted(true);
+        movieRepo.save(movie.get());
         return true;
 
     }
 
-    public MovieDto updateMovie(Movie movie) {
+    public MovieDto updateMovie(Long id, MovieDto movieDto) {
+        Optional<Movie> movie = movieRepo.findById(id);
+        if (movie.isEmpty() || movie.get().isDeleted()) {
+            throw new MovieNotFoundException(Movie.class, "id");
+        }
 
-        if (!movieRepo.existsById(movie.getId())) throw new MovieNotFoundException(Movie.class, "id");
+        if (movieDto.getName() != null) {
+            movie.get().setName(movieDto.getName());
+        }
+        if (movieDto.getDescription() != null) {
+            movie.get().setDescription(movieDto.getDescription());
+        }
+        if (movieDto.getType() != null) {
+            movie.get().setType(movieDto.getType());
+        }
+        if (movieDto.getDuration() != null) {
+            movie.get().setDuration(movieDto.getDuration());
+        }
+        if (movieDto.getReleaseDate() != null) {
+            movie.get().setReleaseDate(movieDto.getReleaseDate());
+        }
 
-        if (movie.isDeleted()) throw new MovieNotFoundException(Movie.class, "id");
-
-        movieRepo.save(movie);
-        MovieDto updatedMovie = mapper.map(movie, MovieDto.class);
-        return updatedMovie;
+        movieRepo.save(movie.get());
+        return mapper.map(movie.get(), MovieDto.class);
     }
 
 

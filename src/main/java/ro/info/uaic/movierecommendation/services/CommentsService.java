@@ -87,10 +87,8 @@ public class CommentsService {
         }
 
         List<Comment> comments = commentRepository.findByMovie(movie.get());
-        List<CommentDTO> commentDtos = comments.stream()
-                .map(comment -> new CommentDTO(comment.getId(), comment.getMovie().getId(),
-                        comment.getUser().getId(), comment.getContent())).toList();
-        return commentDtos;
+        return comments.stream()
+                .map(comment -> mapper.map(comment, CommentDTO.class)).toList();
     }
 
     public List<CommentDTO> getCommentsByMovieIdAndUserId(Long movieId, Long userId){

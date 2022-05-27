@@ -42,11 +42,8 @@ public class MovieController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MovieDto> getMovieById(@PathVariable Long id) throws MovieNotFoundException {
-
-        Optional<Movie> movieOptional = service.getMovieById(id);
-        MovieDto foundMovie = mapper.map(movieOptional.get(), MovieDto.class);
-        return ResponseEntity.ok().body(foundMovie);
+    public MovieDto getMovieById(@PathVariable Long id) throws MovieNotFoundException {
+        return service.getMovieById(id);
     }
 
     @GetMapping("/top/{sizeTop}")
@@ -112,12 +109,7 @@ public class MovieController {
 
     @DeleteMapping("/{movieId}")
     public ResponseEntity<?> deleteById(@PathVariable Long movieId) {
-        Optional<Movie> movieOptional = service.getMovieById(movieId);
-
-        if (movieOptional.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        if (!service.deleteMovie(movieOptional.get())) {
+        if (!service.deleteMovie(movieId)) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -125,19 +117,9 @@ public class MovieController {
 
     @PutMapping(value = "/{movieId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MovieDto> updateMovie(@PathVariable Long movieId,
-                                                @RequestBody MovieDto updatedMovie)
-            throws MovieNotFoundException {
-        Optional<Movie> movieOptional = service.getMovieById(movieId);
-
-        if (movieOptional.isEmpty()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
-        Movie presentMovie = mapper.map(updatedMovie, Movie.class);
-        presentMovie.setId(movieOptional.get().getId());
-        updatedMovie = service.updateMovie(presentMovie);
-
-        if (updatedMovie == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        return new ResponseEntity<>(updatedMovie, new HttpHeaders(), HttpStatus.RESET_CONTENT);
+                                                @RequestBody MovieDto updatedMovie) throws MovieNotFoundException {
+        return new ResponseEntity<>(service.updateMovie(movieId, updatedMovie),
+                    new HttpHeaders(), HttpStatus.RESET_CONTENT);
     }
 
     @PostMapping(value = "/singlePrediction", consumes = MediaType.APPLICATION_JSON_VALUE)
