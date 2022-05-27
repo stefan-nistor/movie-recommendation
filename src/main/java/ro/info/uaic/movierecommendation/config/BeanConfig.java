@@ -11,7 +11,7 @@ import java.util.Properties;
 @Configuration
 public class BeanConfig {
     @Bean
-    ModelMapper modelMapper() {
+    public ModelMapper modelMapper() {
         return new ModelMapper();
     }
 

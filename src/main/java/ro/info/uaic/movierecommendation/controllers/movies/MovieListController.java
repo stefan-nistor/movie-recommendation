@@ -23,11 +23,13 @@ public class MovieListController {
     @Autowired
     private MovieService movieService;
 
+    @Deprecated
     @GetMapping
     public ResponseEntity<List<MovieListDTO>> getMovieLists()  {
         return ResponseEntity.ok().body(movieListService.findAll());
     }
 
+    @Deprecated
     @GetMapping("/names")
     public ResponseEntity<MovieListDTO> getMovieListByName(@RequestParam("name") String name) {
         return ResponseEntity.ok().body(movieListService.findByName(name));

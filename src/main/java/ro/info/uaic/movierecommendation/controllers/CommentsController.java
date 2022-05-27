@@ -73,32 +73,21 @@ public class CommentsController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Comment>> getCommentsByMovieId(@RequestParam("movieId") Long movieId) {
+    public ResponseEntity<List<CommentDTO>> getCommentsByMovieId(@RequestParam("movieId") Long movieId) {
         Optional<Movie> movieOptional = movieRepository.findById(movieId);
 
         if (movieOptional.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else
+        } else {
             return new ResponseEntity<>(commentsService.getCommentsByMovieId(movieId), new HttpHeaders(), HttpStatus.OK);
+        }
     }
 
     @GetMapping("/ids")
-    public ResponseEntity<List<Comment>> getCommentsByMovieIdAndUserId(@RequestParam("movieId") Long movieId,
+    public ResponseEntity<List<CommentDTO>> getCommentsByMovieIdAndUserId(@RequestParam("movieId") Long movieId,
                                                                        @RequestParam("userId") Long userId) {
-        Optional<Movie> movieOptional = movieRepository.findById(movieId);
-        Optional<UserEntity> userOptional = userRepo.findById(userId);
-
-        if (movieOptional.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        if (userOptional.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
         return new ResponseEntity<>(commentsService.getCommentsByMovieIdAndUserId(movieId, userId),
                                     new HttpHeaders(), HttpStatus.OK);
 
     }
-
-
 }

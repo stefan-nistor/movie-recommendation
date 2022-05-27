@@ -6,19 +6,27 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "usermovielabel")
+@Table(name = "usermovieratings")
 @Builder
-public class UserMovieLabel {
+public class UserMovieRating {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
     private String userId;
     private String movieId;
+    @NotNull
     private Boolean label;
+    @NotNull
+    @Min(1)
+    @Max(10)
+    private Integer rating;
 }
