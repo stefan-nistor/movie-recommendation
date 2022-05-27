@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ro.info.uaic.movierecommendation.dtoresponses.CommentDTO;
+import ro.info.uaic.movierecommendation.dtoresponses.UserObj;
 import ro.info.uaic.movierecommendation.entites.Comment;
 import ro.info.uaic.movierecommendation.entites.UserEntity;
 import ro.info.uaic.movierecommendation.exceptions.MovieNotFoundException;
@@ -48,6 +49,7 @@ public class CommentsService {
         comment1.setUser(userRepo.findById(comment.getUserId()).get());
         comment1.setMovie(movieRepository.findById(comment.getMovieId()).get());
         comment1.setContent(comment.getContent());
+        comment1.setDate(comment.getDate());
         commentRepository.save(comment1);
         return comment;
     }
@@ -67,7 +69,9 @@ public class CommentsService {
         commentDTO.setId(commentToUpdate.get().getId());
         commentDTO.setUserId(commentToUpdate.get().getUser().getId());
         commentDTO.setMovieId(commentToUpdate.get().getMovie().getId());
-        commentDTO.setContent(commentDTO.getContent());
+        commentDTO.setUserObj(mapper.map(commentToUpdate.get().getUser(), UserObj.class));
+        commentDTO.setContent(commentToUpdate.get().getContent());
+        commentDTO.setDate(commentToUpdate.get().getDate());
         return commentDTO;
     }
 
@@ -88,7 +92,9 @@ public class CommentsService {
 
         List<Comment> comments = commentRepository.findByMovie(movie.get());
         return comments.stream()
-                .map(comment -> mapper.map(comment, CommentDTO.class)).toList();
+                .map(comment -> new CommentDTO(comment.getId(), comment.getMovie().getId(),
+                        comment.getUser().getId(), mapper.map(comment.getUser(), UserObj.class),
+                        comment.getContent(), comment.getDate())).toList();
     }
 
     public List<CommentDTO> getCommentsByMovieIdAndUserId(Long movieId, Long userId){
@@ -105,6 +111,7 @@ public class CommentsService {
         List<Comment> comments = commentRepository.findByUserAndMovie(user.get(), movie.get());
         return comments.stream()
                 .map(comment -> new CommentDTO(comment.getId(), comment.getMovie().getId(),
-                        comment.getUser().getId(), comment.getContent())).toList();
+                        comment.getUser().getId(), mapper.map(comment.getUser(), UserObj.class),
+                        comment.getContent(), comment.getDate())).toList();
     }
 }
