@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import ro.info.uaic.movierecommendation.models.movies.Movie;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -27,4 +28,5 @@ public class Comment {
     @JoinColumn(name = "id_user", referencedColumnName = "id")
     private UserEntity user;
     private String content;
+    private Date date;
 }
