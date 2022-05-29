@@ -36,27 +36,25 @@ public class MovieListController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<MovieListDTO> addMovieToList(@RequestParam("user_id") Long user_id,
+    public ResponseEntity<MovieListDTO> addMovieToList(@RequestParam("userId") Long userId,
                                                        @RequestParam("lname") String movieListName,
-                                                       @RequestParam("mname") String movieName) throws UserNotFoundException {
+                                                       @RequestParam("movieId") Long movieId) throws UserNotFoundException {
         return ResponseEntity.ok().body(
-                movieListService.addMovieToList(movieService.findByName(movieName,
-                                Pageable.unpaged()),
-                        movieListService.findListOfUser(user_id,movieListName)));
+                movieListService.addMovieToList(movieService.findById(movieId),
+                        movieListService.findListOfUser(userId,movieListName)));
     }
 
     @DeleteMapping("/remove")
-    public ResponseEntity<MovieListDTO> removeMovieFromList(@RequestParam("user_id") Long user_id,
+    public ResponseEntity<MovieListDTO> removeMovieFromList(@RequestParam("userId") Long user_id,
                                                             @RequestParam("lname") String movieListName,
-                                                            @RequestParam("mname") String movieName) throws UserNotFoundException {
+                                                            @RequestParam("movieId") Long movieId) throws UserNotFoundException {
         return ResponseEntity.ok().body(
-                movieListService.removeMovieToList(movieService.findByName(movieName,
-                                Pageable.unpaged()),
+                movieListService.removeMovieToList(movieService.findById(movieId),
                         movieListService.findListOfUser(user_id,movieListName)));
     }
 
     @PostMapping
-    public ResponseEntity<?> createList( @RequestParam("user_id") Long userId,
+    public ResponseEntity<?> createList( @RequestParam("userId") Long userId,
                                          @RequestParam("lname") String movieListName) throws UserNotFoundException {
         MovieListDTO insertedMovieList = movieListService.create(movieListName,userId);
         if (insertedMovieList == null) {
@@ -67,7 +65,7 @@ public class MovieListController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteList(@RequestParam("user_id") Long userId,
+    public ResponseEntity<?> deleteList(@RequestParam("userId") Long userId,
                                         @RequestParam("lname") String movieListName) throws UserNotFoundException {
         MovieListDTO deletedMovieList = movieListService.findListOfUser(userId,movieListName);
         if (deletedMovieList == null) {
@@ -79,7 +77,7 @@ public class MovieListController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<List<MovieListDTO>> getUserLists(@RequestParam("user_id") Long userId){
+    public ResponseEntity<List<MovieListDTO>> getUserLists(@RequestParam("userId") Long userId){
 
         List<MovieListDTO> userLists=movieListService.findUserLists(userId);
         if(userLists == null){
@@ -89,7 +87,7 @@ public class MovieListController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<MovieListDTO> getMoviesFromList(@RequestParam("user_id") Long userId,
+    public ResponseEntity<MovieListDTO> getMoviesFromList(@RequestParam("userId") Long userId,
                                                           @RequestParam("lname") String movieListName)
             throws UserNotFoundException {
         MovieListDTO movieListDTO=movieListService.findListOfUser(userId,movieListName);
