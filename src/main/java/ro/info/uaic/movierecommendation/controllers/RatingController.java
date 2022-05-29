@@ -37,10 +37,10 @@ public class RatingController {
     }
 
 
-    @GetMapping
-    public ResponseEntity<?> getRating(@RequestBody UserMovieRatingDto userMovieRatingDto)
+    @GetMapping("/ids")
+    public ResponseEntity<?> getRating(@RequestParam Long userId, @RequestParam Long movieId)
             throws RatingNotFoundException {
-        return ResponseEntity.ok().body(ratingService.findByIds(userMovieRatingDto));
+        return ResponseEntity.ok().body(ratingService.findByIds(userId, movieId));
     }
 
     @PostMapping

@@ -60,9 +60,9 @@ public class RatingService {
                 .collect(Collectors.toList());
     }
 
-    public UserMovieRating findByIds(UserMovieRatingDto userMovieRatingDto) throws RatingNotFoundException {
+    public UserMovieRating findByIds(Long userId, Long movieId) throws RatingNotFoundException {
         Optional<UserMovieRating> userMovieRating = ratingRepo.findByUserIdAndMovieId(
-                userMovieRatingDto.getUserId(), userMovieRatingDto.getMovieId());
+                userId.toString(), movieId.toString());
 
         if (userMovieRating.isEmpty()) {
             throw new RatingNotFoundException(UserMovieRating.class, "movie/user_id");
