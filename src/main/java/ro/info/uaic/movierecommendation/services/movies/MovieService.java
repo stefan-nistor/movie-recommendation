@@ -261,4 +261,14 @@ public class MovieService {
 
         return movieList;
     }
+
+    public MovieDto findById(Long movieId) {
+        Optional<Movie> movie = movieRepo.findById(movieId);
+
+        if (movie.isEmpty()) {
+            throw new MovieNotFoundException(Movie.class, "id");
+        }
+
+        return mapper.map(movie.get(), MovieDto.class);
+    }
 }
