@@ -13,6 +13,7 @@ import ro.info.uaic.movierecommendation.models.movies.Movie;
 import ro.info.uaic.movierecommendation.services.UserService;
 
 import java.security.Principal;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -45,9 +46,6 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<UserObj> updateUserForBody(@PathVariable Long id, @RequestBody UserDTO userDTO) {
-        if (userDTO.getId() != null && id != userDTO.getId()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
         return new ResponseEntity<>(userService.updateUserForBody(id, userDTO), HttpStatus.RESET_CONTENT);
     }
 
