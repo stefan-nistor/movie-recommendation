@@ -94,7 +94,7 @@ public class CommentsService {
         return comments.stream()
                 .map(comment -> new CommentDTO(comment.getId(), comment.getMovie().getId(),
                         comment.getUser().getId(), mapper.map(comment.getUser(), UserObj.class),
-                        comment.getContent(), comment.getDate())).toList();
+                        comment.getContent(), comment.getDate())).collect(Collectors.toList());
     }
 
     public List<CommentDTO> getCommentsByMovieIdAndUserId(Long movieId, Long userId){
@@ -112,6 +112,6 @@ public class CommentsService {
         return comments.stream()
                 .map(comment -> new CommentDTO(comment.getId(), comment.getMovie().getId(),
                         comment.getUser().getId(), mapper.map(comment.getUser(), UserObj.class),
-                        comment.getContent(), comment.getDate())).toList();
+                        comment.getContent(), comment.getDate())).collect(Collectors.toList());
     }
 }
