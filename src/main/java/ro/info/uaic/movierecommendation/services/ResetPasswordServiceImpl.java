@@ -11,6 +11,7 @@ import ro.info.uaic.movierecommendation.exceptions.InvalidPasswordException;
 import ro.info.uaic.movierecommendation.exceptions.UserNotFoundException;
 import ro.info.uaic.movierecommendation.repos.UserRepo;
 
+import javax.transaction.Transactional;
 import java.util.UUID;
 
 @Service
@@ -32,7 +33,7 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
     private BCryptPasswordEncoder passwordEncoder;
 
     @Override
-    public void sendTokenToEmail(String email) throws UserNotFoundException {
+    public void sendTokenToEmail(String email) {
         var user = userRepo.findByEmail(email);
         if (user.isEmpty()) {
             throw new UserNotFoundException("No such user with given email");
@@ -42,15 +43,14 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
         userEntity.setPasswordToken(token);
         userService.updateUser(mapper.map(userEntity, UserDTO.class));
 
-        String text = "To reset your password, click the link below:\n" + token + "/reset?token=" + userEntity.getPasswordToken();
+        String text = "To reset your password, click the link below:\nhttp://localhost:3001/IP-Movie-streaming-website/reset-pass?token=" + userEntity.getPasswordToken();
 
         emailService.sendEmail(user.get().getEmail(), text);
     }
 
     @Override
-    public void resetPassword(PasswordDTO password) throws InvalidPasswordException {
-
-        //TODO Verify if token matches userToken
+    @Transactional
+    public void resetPassword(PasswordDTO password) {
 
         /**
          * The password is at least 6 characters long (?=.{8,}).
@@ -71,10 +71,12 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
             throw new InvalidPasswordException("Confirmation password doesn't match");
         }
 
-        var user = userRepo.findByPasswordToken(password.getResetToken());
-        UserEntity userEntity = user.get();
-        userEntity.setPassword(passwordEncoder.encode(password.getNewPassword()));
-        userRepo.save(userEntity);
+        var userId = userRepo.findByPasswordToken(password.getResetToken()).orElseThrow(() -> new UserNotFoundException("Bad reset token"));
+        var user = userRepo.findById(userId.getId()).orElseThrow(() -> new UserNotFoundException("user not found"));
+        String encryptedPassword = passwordEncoder.encode(password.getNewPassword());
+        user.setPassword(encryptedPassword);
+        user.setPasswordToken(null);
+        userRepo.save(user);
     }
 
 }

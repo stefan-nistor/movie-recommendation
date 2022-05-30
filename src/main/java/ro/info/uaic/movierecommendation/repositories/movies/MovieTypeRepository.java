@@ -6,6 +6,6 @@ import ro.info.uaic.movierecommendation.models.movies.Type;
 import java.util.List;
 
 public interface MovieTypeRepository extends JpaRepository<MovieType, Long> {
-
     List<MovieType> findByTypeIn(List<Type> type);
+    MovieType findByType(Type type);
 }

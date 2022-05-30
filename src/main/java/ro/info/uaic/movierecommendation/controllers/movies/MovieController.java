@@ -10,14 +10,15 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.info.uaic.movierecommendation.dtoresponses.UserMovieLabelDto;
+import ro.info.uaic.movierecommendation.dtoresponses.UserMovieRatingDto;
 import ro.info.uaic.movierecommendation.dtoresponses.movies.MovieDto;
 import ro.info.uaic.movierecommendation.exceptions.MovieNotFoundException;
 import ro.info.uaic.movierecommendation.models.movies.Movie;
 import ro.info.uaic.movierecommendation.models.movies.Type;
 import ro.info.uaic.movierecommendation.services.movies.MovieService;
-import ro.info.uaic.movierecommendation.entites.UserMovieLabel;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -31,22 +32,18 @@ public class MovieController {
     private ModelMapper mapper;
 
     @GetMapping
-    public ResponseEntity<List<MovieDto>> getMovieList(@RequestParam Optional<Integer> page,
+    public ResponseEntity<Map<String, Object>> getMovieList(@RequestParam Optional<Integer> page,
                                                        @RequestParam Optional<Integer> size,
                                                        @RequestParam Optional<String> sortBy)
             throws MovieNotFoundException {
-
 
         return ResponseEntity.ok().body(service.findAll(PageRequest.of(page.orElse(0), size.orElse(5),
                 Sort.Direction.ASC, sortBy.orElse("id"))));
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<MovieDto> getMovieById(@PathVariable Long id) throws MovieNotFoundException {
-
-        Optional<Movie> movieOptional = service.getMovieById(id);
-        MovieDto foundMovie = mapper.map(movieOptional.get(), MovieDto.class);
-        return ResponseEntity.ok().body(foundMovie);
+    @GetMapping("/{id}")
+    public MovieDto getMovieById(@PathVariable Long id) throws MovieNotFoundException {
+        return service.getMovieById(id);
     }
 
     @GetMapping("/top/{sizeTop}")
@@ -64,7 +61,7 @@ public class MovieController {
 
 
     @GetMapping("/names")
-    public ResponseEntity<List<MovieDto>> getMovieByName(@RequestParam("name") String name,
+    public ResponseEntity<MovieDto> getMovieByName(@RequestParam("name") String name,
                                                          @RequestParam Optional<Integer> page,
                                                          @RequestParam Optional<Integer> size,
                                                          @RequestParam Optional<String> sortBy)
@@ -76,7 +73,7 @@ public class MovieController {
     }
 
     @GetMapping("/types")
-    public ResponseEntity<List<MovieDto>> getMovieByType(@RequestParam("type") List<Type> valuesType,
+    public ResponseEntity<Map<String, Object>> getMovieByType(@RequestParam("type") List<Type> valuesType,
                                                          @RequestParam Optional<Integer> page,
                                                          @RequestParam Optional<Integer> size,
                                                          @RequestParam Optional<String> sortBy)
@@ -112,12 +109,7 @@ public class MovieController {
 
     @DeleteMapping("/{movieId}")
     public ResponseEntity<?> deleteById(@PathVariable Long movieId) {
-        Optional<Movie> movieOptional = service.getMovieById(movieId);
-
-        if (movieOptional.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        if (!service.deleteMovie(movieOptional.get())) {
+        if (!service.deleteMovie(movieId)) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -125,34 +117,23 @@ public class MovieController {
 
     @PutMapping(value = "/{movieId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MovieDto> updateMovie(@PathVariable Long movieId,
-                                                @RequestBody MovieDto updatedMovie)
-            throws MovieNotFoundException {
-        Optional<Movie> movieOptional = service.getMovieById(movieId);
-
-        if (movieOptional.isEmpty()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
-        Movie presentMovie = mapper.map(updatedMovie, Movie.class);
-        presentMovie.setId(movieOptional.get().getId());
-        updatedMovie = service.updateMovie(presentMovie);
-
-        if (updatedMovie == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        return new ResponseEntity<>(updatedMovie, new HttpHeaders(), HttpStatus.RESET_CONTENT);
+                                                @RequestBody MovieDto updatedMovie) throws MovieNotFoundException {
+        return new ResponseEntity<>(service.updateMovie(movieId, updatedMovie),
+                    new HttpHeaders(), HttpStatus.RESET_CONTENT);
     }
 
-    @GetMapping(value = "/singlePrediction", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Boolean> getSinglePrediction(@RequestBody UserMovieLabelDto userMovieLabelDto) {
-        Boolean predictedLevel = service.getSinglePrediction(userMovieLabelDto);
+    @PostMapping(value = "/singlePrediction", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> getSinglePrediction(@RequestBody UserMovieRatingDto userMovieRatingDto) {
+        Boolean predictedLevel = service.getSinglePrediction(userMovieRatingDto);
 
         return new ResponseEntity<>(predictedLevel, new HttpHeaders(), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/predictions/{noOfPredictions}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<MovieDto>> getPredictions(@PathVariable Integer noOfPredictions,
-                                                         @RequestBody List<UserMovieLabelDto> userMovieLabelDtoList) {
-        List<MovieDto> movieList = service.getPredictions(noOfPredictions, userMovieLabelDtoList);
+    @PostMapping(value = "/predictions/{noOfPredictions}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Object>> getPredictions(@PathVariable Integer noOfPredictions,
+                                                         @RequestBody List<UserMovieRatingDto> userMovieRatingDtoList) {
+        Map<String, Object> movieList = service.getPredictions(noOfPredictions, userMovieRatingDtoList);
 
         return new ResponseEntity<>(movieList, new HttpHeaders(), HttpStatus.OK);
     }
-
 }

@@ -1,4 +1,4 @@
-package ro.info.uaic.movierecommendation.advice;
+package ro.info.uaic.movierecommendation.handlers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;

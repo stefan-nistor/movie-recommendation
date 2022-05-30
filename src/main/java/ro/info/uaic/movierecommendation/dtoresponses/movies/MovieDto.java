@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class MovieDto {
 
+    private Long id;
     @NotNull
     private String name;
     @NotNull
@@ -21,11 +22,12 @@ public class MovieDto {
     @NotNull
     private List<MovieType> type;
     @NotNull
-    private String duration;
+    private Long duration;
     private String director;
     private String writer;
     private boolean hasCaptions;
     private Date releaseDate;
+    private boolean isDeleted;
 
     // Images
     private Integer imdbId;
