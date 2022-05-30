@@ -8,7 +8,7 @@ import java.util.stream.IntStream;
 
 public class MovieNotInListException extends RuntimeException {
 
-    public MovieNotInListException(Class nameClass, String... searchParamsMap) {
+    public MovieNotInListException(Class<?> nameClass, String... searchParamsMap) {
         super(MovieNotInListException.generateMessage(nameClass.getSimpleName(), toMap(String.class, String.class, searchParamsMap)));
     }
 

@@ -33,8 +33,8 @@ public class MovieController {
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> getMovieList(@RequestParam Optional<Integer> page,
-                                                       @RequestParam Optional<Integer> size,
-                                                       @RequestParam Optional<String> sortBy)
+                                                            @RequestParam Optional<Integer> size,
+                                                            @RequestParam Optional<String> sortBy)
             throws MovieNotFoundException {
 
         return ResponseEntity.ok().body(service.findAll(PageRequest.of(page.orElse(0), size.orElse(5),
@@ -62,24 +62,24 @@ public class MovieController {
 
     @GetMapping("/names")
     public ResponseEntity<MovieDto> getMovieByName(@RequestParam("name") String name,
-                                                         @RequestParam Optional<Integer> page,
-                                                         @RequestParam Optional<Integer> size,
-                                                         @RequestParam Optional<String> sortBy)
+                                                   @RequestParam Optional<Integer> page,
+                                                   @RequestParam Optional<Integer> size,
+                                                   @RequestParam Optional<String> sortBy)
             throws MovieNotFoundException {
 
-        return new ResponseEntity(service.findByName(name, PageRequest.of(page.orElse(0),
+        return new ResponseEntity<>(service.findByName(name, PageRequest.of(page.orElse(0),
                 size.orElse(5), Sort.Direction.ASC, sortBy.orElse("id"))), HttpStatus.OK);
 
     }
 
     @GetMapping("/types")
     public ResponseEntity<Map<String, Object>> getMovieByType(@RequestParam("type") List<Type> valuesType,
-                                                         @RequestParam Optional<Integer> page,
-                                                         @RequestParam Optional<Integer> size,
-                                                         @RequestParam Optional<String> sortBy)
+                                                              @RequestParam Optional<Integer> page,
+                                                              @RequestParam Optional<Integer> size,
+                                                              @RequestParam Optional<String> sortBy)
             throws MovieNotFoundException {
 
-        return new ResponseEntity(service.findByType(valuesType, PageRequest.of(page.orElse(0),
+        return new ResponseEntity<>(service.findByType(valuesType, PageRequest.of(page.orElse(0),
                 size.orElse(5), Sort.Direction.ASC, sortBy.orElse("id"))), HttpStatus.OK);
 
     }
@@ -91,13 +91,13 @@ public class MovieController {
                                                           @RequestParam Optional<String> sortBy)
             throws MovieNotFoundException {
 
-        return new ResponseEntity(service.findByActor(valuesName, PageRequest.of(page.orElse(0),
+        return new ResponseEntity<>(service.findByActor(valuesName, PageRequest.of(page.orElse(0),
                 size.orElse(5), Sort.Direction.ASC, sortBy.orElse("id"))), HttpStatus.OK);
 
     }
 
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> postMovie(@RequestBody MovieDto newMovie) {
+    public ResponseEntity<MovieDto> postMovie(@RequestBody MovieDto newMovie) {
 
         MovieDto insertedMovie = service.createMovie(newMovie);
         if (insertedMovie == null) {
@@ -108,7 +108,7 @@ public class MovieController {
     }
 
     @DeleteMapping("/{movieId}")
-    public ResponseEntity<?> deleteById(@PathVariable Long movieId) {
+    public ResponseEntity<Void> deleteById(@PathVariable Long movieId) {
         if (!service.deleteMovie(movieId)) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -119,7 +119,7 @@ public class MovieController {
     public ResponseEntity<MovieDto> updateMovie(@PathVariable Long movieId,
                                                 @RequestBody MovieDto updatedMovie) throws MovieNotFoundException {
         return new ResponseEntity<>(service.updateMovie(movieId, updatedMovie),
-                    new HttpHeaders(), HttpStatus.RESET_CONTENT);
+                new HttpHeaders(), HttpStatus.RESET_CONTENT);
     }
 
     @PostMapping(value = "/singlePrediction", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -131,7 +131,7 @@ public class MovieController {
 
     @PostMapping(value = "/predictions/{noOfPredictions}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> getPredictions(@PathVariable Integer noOfPredictions,
-                                                         @RequestBody List<UserMovieRatingDto> userMovieRatingDtoList) {
+                                                              @RequestBody List<UserMovieRatingDto> userMovieRatingDtoList) {
         Map<String, Object> movieList = service.getPredictions(noOfPredictions, userMovieRatingDtoList);
 
         return new ResponseEntity<>(movieList, new HttpHeaders(), HttpStatus.OK);

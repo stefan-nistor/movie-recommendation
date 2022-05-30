@@ -16,13 +16,13 @@ public class ResetPasswordController {
     ResetPasswordService resetPasswordService;
 
     @PostMapping("/api/v1/reset-password/{email}")
-    public ResponseEntity<?> sendResetToken(@PathVariable String email) throws UserNotFoundException {
+    public ResponseEntity<Void> sendResetToken(@PathVariable String email) throws UserNotFoundException {
         resetPasswordService.sendTokenToEmail(email);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PostMapping("/api/v1/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestBody PasswordDTO passwordDTO) throws InvalidPasswordException {
+    public ResponseEntity<Void> resetPassword(@RequestBody PasswordDTO passwordDTO) throws InvalidPasswordException {
         resetPasswordService.resetPassword(passwordDTO);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

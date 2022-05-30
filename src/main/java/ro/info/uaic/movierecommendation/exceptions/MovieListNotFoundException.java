@@ -8,7 +8,7 @@ import java.util.stream.IntStream;
 
 public class MovieListNotFoundException extends RuntimeException {
 
-    public MovieListNotFoundException(Class nameClass, String... searchParamsMap) {
+    public MovieListNotFoundException(Class<?> nameClass, String... searchParamsMap) {
         super(MovieListNotFoundException.generateMessage(nameClass.getSimpleName(), toMap(String.class, String.class, searchParamsMap)));
     }
 

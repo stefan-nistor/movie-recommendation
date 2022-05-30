@@ -27,7 +27,7 @@ public class UserController {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @PostMapping
-    ResponseEntity<?> createNewUser(@RequestBody UserDTO userDTO) {
+    ResponseEntity<Void> createNewUser(@RequestBody UserDTO userDTO) {
         userDTO.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
         userService.saveNewUser(userDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -50,7 +50,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
