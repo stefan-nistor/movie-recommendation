@@ -14,11 +14,8 @@ import ro.info.uaic.movierecommendation.models.movies.Movie;
 import ro.info.uaic.movierecommendation.repos.CommentRepository;
 import ro.info.uaic.movierecommendation.repos.UserRepo;
 import ro.info.uaic.movierecommendation.repositories.movies.MovieRepository;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class CommentsService {
@@ -38,14 +35,21 @@ public class CommentsService {
         Optional<Movie> movie = movieRepository.findById(comment.getMovieId());
         Optional<UserEntity> user = userRepo.findById(comment.getUserId());
 
-        if(movie.isEmpty()) {
+        if (movie.isEmpty()) {
             throw new MovieNotFoundException(Movie.class, "id");
         }
-        if(user.isEmpty()) {
+        if (user.isEmpty()) {
             throw new UserNotFoundException("User not found for this id.");
         }
 
         Comment comment1 = new Comment();
+        if (userRepo.findById(comment.getUserId()).isEmpty()) {
+            throw new UserNotFoundException("User not found for this id.");
+        }
+        if (movieRepository.findById(comment.getMovieId()).isEmpty()) {
+            throw new MovieNotFoundException(Movie.class, "Movie not found for this id.");
+        }
+
         comment1.setUser(userRepo.findById(comment.getUserId()).get());
         comment1.setMovie(movieRepository.findById(comment.getMovieId()).get());
         comment1.setContent(comment.getContent());
@@ -57,7 +61,7 @@ public class CommentsService {
     public CommentDTO updateComment(Long id, String content) {
         Optional<Comment> commentToUpdate = commentRepository.findById(id);
 
-        if(commentToUpdate.isEmpty()){
+        if (commentToUpdate.isEmpty()) {
             return null;
         }
 
@@ -75,18 +79,18 @@ public class CommentsService {
         return commentDTO;
     }
 
-    public Optional<Comment> getCommentById(Long id){
+    public Optional<Comment> getCommentById(Long id) {
         return commentRepository.findById(id);
     }
 
-    public void deleteComment(Long id){
+    public void deleteComment(Long id) {
         commentRepository.deleteById(id);
     }
 
-    public List<CommentDTO> getCommentsByMovieId(Long movieId){
+    public List<CommentDTO> getCommentsByMovieId(Long movieId) {
         Optional<Movie> movie = movieRepository.findById(movieId);
 
-        if(movie.isEmpty()) {
+        if (movie.isEmpty()) {
             throw new MovieNotFoundException(Movie.class, "id");
         }
 
@@ -97,14 +101,14 @@ public class CommentsService {
                         comment.getContent(), comment.getDate())).collect(Collectors.toList());
     }
 
-    public List<CommentDTO> getCommentsByMovieIdAndUserId(Long movieId, Long userId){
+    public List<CommentDTO> getCommentsByMovieIdAndUserId(Long movieId, Long userId) {
         Optional<Movie> movie = movieRepository.findById(movieId);
         Optional<UserEntity> user = userRepo.findById(userId);
 
-        if(movie.isEmpty()) {
+        if (movie.isEmpty()) {
             throw new MovieNotFoundException(Movie.class, "id");
         }
-        if(user.isEmpty()) {
+        if (user.isEmpty()) {
             throw new UserNotFoundException("User not found for this id.");
         }
 

@@ -1,10 +1,6 @@
 package ro.info.uaic.movierecommendation.models.movies;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import ro.info.uaic.movierecommendation.entites.UserEntity;
-import ro.info.uaic.movierecommendation.models.movies.Movie;
-
 import javax.persistence.*;
 import java.util.List;
 

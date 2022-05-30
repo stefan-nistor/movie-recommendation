@@ -34,7 +34,6 @@ public class MovieListService {
     @Autowired
     private UserRepo userRepo;
 
-
     public List<MovieListDTO> findAll() {
 
         List<MovieListDTO> movieListDTOList = listRepo.findAll().stream()
@@ -47,7 +46,6 @@ public class MovieListService {
         return movieListDTOList;
     }
 
-
     public MovieListDTO findByName(String name) {
         MovieListDTO movieListDTO = modelMapper.map(listRepo.findByName(name), MovieListDTO.class);
         if (movieListDTO == null) {
@@ -57,8 +55,7 @@ public class MovieListService {
     }
 
     public MovieListDTO findByID(Long movieListID) {
-        MovieListDTO movieListDTO = modelMapper.map(listRepo.findById(movieListID), MovieListDTO.class);
-        return movieListDTO;
+        return modelMapper.map(listRepo.findById(movieListID), MovieListDTO.class);
     }
 
     public MovieListDTO addMovieToList(MovieDto movieDTO, MovieListDTO movieListDTO) {
@@ -73,6 +70,10 @@ public class MovieListService {
 
         if (listRepo.findByUser(user.get()).size() >= 1) {
             return null;
+        }
+
+        if (listRepo.findByUserAndName(user.get(), movieListDTO.getName()).isEmpty()) {
+            throw new MovieListNotFoundException(MovieList.class, "doesn't exist this list for the user");
         }
 
         MovieList movieList = modelMapper.map(listRepo.findByUserAndName(user.get(), movieListDTO.getName()),

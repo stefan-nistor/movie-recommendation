@@ -27,7 +27,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     private static final String TOKEN_PREFIX = "Bearer ";
     private static final String AUTHORIZATION = "Authorization";
-    private static final String SIGN_UP_URL = "/api/v1/users";
     private static final String SECRET = "SECRET_KEY";
 
     @Override
