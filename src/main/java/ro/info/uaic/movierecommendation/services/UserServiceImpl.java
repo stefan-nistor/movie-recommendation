@@ -23,7 +23,8 @@ import java.util.Optional;
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {
-
+    static final String EMAIL = "email";
+    static final String USER_NOT_FOUND_FOR_THIS_ID = "User not found for this id.";
     @Autowired
     private UserRepo userRepo;
     @Autowired
@@ -65,17 +66,17 @@ public class UserServiceImpl implements UserService {
 
         return mapper.map(user, UserObj.class);
     }
-    
+
     public void saveOauth2User(OAuth2User user) {
-        var entity = userRepo.findByEmail(user.getAttribute("email"));
+        var entity = userRepo.findByEmail(user.getAttribute(EMAIL));
         if (entity.isPresent()) {
             log.info("OAuth2 user {} already in database", user);
             return;
         }
 
         userRepo.save(UserEntity.builder()
-                .username(user.getAttribute("email"))
-                .email(user.getAttribute("email"))
+                .username(user.getAttribute(EMAIL))
+                .email(user.getAttribute(EMAIL))
                 .firstname(user.getAttribute("given_name"))
                 .lastname(user.getAttribute("family_name"))
                 .build()
@@ -85,7 +86,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO findUserByResetToken(String token) {
-        var result = userRepo.findByPasswordToken(token).orElseThrow(() ->  new UserNotFoundException("user not found"));
+        var result = userRepo.findByPasswordToken(token).orElseThrow(() -> new UserNotFoundException("user not found"));
         return mapper.map(result, UserDTO.class);
     }
 
@@ -93,7 +94,7 @@ public class UserServiceImpl implements UserService {
     public UserObj getUserById(Long id) {
         Optional<UserEntity> user = userRepo.findById(id);
         if (user.isEmpty()) {
-            throw new UserNotFoundException("User not found for this id.");
+            throw new UserNotFoundException(USER_NOT_FOUND_FOR_THIS_ID);
         }
 
         return mapper.map(user, UserObj.class);
@@ -102,7 +103,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserObj updateUserForBody(Long id, UserDTO userDTO) {
         if (!userRepo.existsById(id)) {
-            throw new UserNotFoundException("User not found for this id.");
+            throw new UserNotFoundException(USER_NOT_FOUND_FOR_THIS_ID);
         }
         UserEntity user = userRepo.getById(id);
         userDTO.setId(id);
@@ -128,7 +129,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long id) {
         Optional<UserEntity> user = userRepo.findById(id);
         if (user.isEmpty()) {
-            throw new UserNotFoundException("User not found for this id.");
+            throw new UserNotFoundException(USER_NOT_FOUND_FOR_THIS_ID);
         }
         userRepo.delete(user.get());
     }

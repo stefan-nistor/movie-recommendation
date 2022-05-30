@@ -1,14 +1,15 @@
 package ro.info.uaic.movierecommendation.exceptions;
 
 import org.springframework.util.StringUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
 
 
-public class MovieNotFoundException extends RuntimeException{
+public class MovieNotFoundException extends RuntimeException {
 
-    public MovieNotFoundException(Class nameClass, String... searchParamsMap) {
+    public MovieNotFoundException(Class<?> nameClass, String... searchParamsMap) {
         super(MovieNotFoundException.generateMessage(nameClass.getSimpleName(), toMap(String.class, String.class, searchParamsMap)));
     }
 

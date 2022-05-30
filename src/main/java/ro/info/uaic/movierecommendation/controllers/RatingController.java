@@ -36,19 +36,19 @@ public class RatingController {
 
 
     @GetMapping("/ids")
-    public ResponseEntity<?> getRating(@RequestParam Long userId, @RequestParam Long movieId)
+    public ResponseEntity<UserMovieRating> getRating(@RequestParam Long userId, @RequestParam Long movieId)
             throws RatingNotFoundException {
         return ResponseEntity.ok().body(ratingService.findByIds(userId, movieId));
     }
 
     @PostMapping
-    public ResponseEntity<?> addRating(@RequestBody UserMovieRatingDto userMovieRatingDto) {
+    public ResponseEntity<Void> addRating(@RequestBody UserMovieRatingDto userMovieRatingDto) {
         ratingService.createRating(userMovieRatingDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping
-    public ResponseEntity<?> removeRating(@RequestParam Long userId, @RequestParam Long movieId) {
+    public ResponseEntity<Void> removeRating(@RequestParam Long userId, @RequestParam Long movieId) {
         if (!ratingService.deleteRating(userId, movieId)) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -56,7 +56,7 @@ public class RatingController {
     }
 
     @PutMapping
-    public ResponseEntity<?> changeRating(@RequestBody UserMovieRatingDto userMovieRatingDto) {
+    public ResponseEntity<Void> changeRating(@RequestBody UserMovieRatingDto userMovieRatingDto) {
         ratingService.updateRating(userMovieRatingDto);
 
         return new ResponseEntity<>(HttpStatus.RESET_CONTENT);
