@@ -3,7 +3,6 @@ package ro.info.uaic.movierecommendation.services;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ro.info.uaic.movierecommendation.dtoresponses.UserMovieLabelDto;
 import ro.info.uaic.movierecommendation.dtoresponses.UserMovieRatingDto;
 import ro.info.uaic.movierecommendation.entites.UserMovieRating;
 import ro.info.uaic.movierecommendation.exceptions.MovieNotFoundException;

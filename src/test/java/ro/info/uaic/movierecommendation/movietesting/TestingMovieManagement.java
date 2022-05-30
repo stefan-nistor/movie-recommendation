@@ -28,10 +28,9 @@ import ro.info.uaic.movierecommendation.dtoresponses.movies.MovieDto;
 import ro.info.uaic.movierecommendation.models.movies.Movie;
 import ro.info.uaic.movierecommendation.models.movies.MovieType;
 import ro.info.uaic.movierecommendation.services.movies.MovieService;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
+
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -85,7 +84,9 @@ class TestingMovieManagement {
         Movie movie = new Movie();
         movie.setId(1L);
         movie.setName("Curierul1");
-        Mockito.when(movieService.getMovieById(movie.getId())).thenReturn(Optional.of(movie));
+        MovieDto postDto = mapper.map(movie, MovieDto.class);
+
+        Mockito.when(movieService.getMovieById(movie.getId())).thenReturn(postDto);
         mockMvc.perform(get("http://localhost:" + PORT + "/api/v1/movies/1").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
                 //.andExpect(jsonPath("$.name").value("Curierul1"));
@@ -111,7 +112,7 @@ class TestingMovieManagement {
         Mockito.when(sourcePageable.getPageNumber()).thenReturn(0);
         Mockito.when(sourcePageable.getPageSize()).thenReturn(3);
 
-        Mockito.when(movieService.findAll(sourcePageable)).thenReturn(movies);
+        Mockito.when(movieService.findAll(sourcePageable)).thenReturn((Map<String, Object>) movies);
         mockMvc.perform(get("http://localhost:" + PORT + "/api/v1/movies/1").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andDo(MockMvcResultHandlers.print());
                 //andExpect(jsonPath("$[1].name").value("Curierul2"));
@@ -162,9 +163,11 @@ class TestingMovieManagement {
         Movie movie = new Movie();
         movie.setId(1L);
 
+        MovieDto postDto = mapper.map(movie, MovieDto.class);
+
         Mockito.when(movieService.getMovieById(movie.getId()))
-                .thenReturn(Optional.of(movie));
-        Mockito.when(movieService.updateMovie(movie)).thenReturn(updatedMovie);
+                .thenReturn(postDto);
+        Mockito.when(movieService.updateMovie(movie.getId(),postDto)).thenReturn(updatedMovie);
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("http://localhost:8080/api/v1/movies/1")
                 .contentType(MediaType.APPLICATION_JSON)
