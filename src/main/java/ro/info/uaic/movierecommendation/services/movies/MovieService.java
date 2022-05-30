@@ -26,6 +26,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class MovieService {
+    static final String COUNT = "count";
+    static final String MOVIES = "movies";
 
     @Autowired
     private ModelMapper modelMapper;
@@ -53,8 +55,8 @@ public class MovieService {
         }
 
         Map<String, Object> movieList = new HashMap<>();
-        movieList.put("count", movieRepo.countByIsDeleted(false));
-        movieList.put("movies", movieDtoList);
+        movieList.put(COUNT, movieRepo.countByIsDeleted(false));
+        movieList.put(MOVIES, movieDtoList);
         return movieList;
     }
 
@@ -89,7 +91,7 @@ public class MovieService {
         List<MovieType> movieTypes = new ArrayList<>();
         type.forEach(t -> movieTypes.add(typeRepo.findByType(t)));
 
-        List<MovieDto> movieDtoListAll= new ArrayList<>();
+        List<MovieDto> movieDtoListAll = new ArrayList<>();
         movieDtoList.forEach(movieDto -> {
             if (movieDto.getType().containsAll(movieTypes)) {
                 movieDtoListAll.add(movieDto);
@@ -114,8 +116,8 @@ public class MovieService {
         }
 
         Map<String, Object> movieList = new HashMap<>();
-        movieList.put("count", count);
-        movieList.put("movies", movieDtoList);
+        movieList.put(COUNT, count);
+        movieList.put(MOVIES, movieDtoList);
 
         return movieList;
     }
@@ -194,7 +196,7 @@ public class MovieService {
     public Boolean getSinglePrediction(UserMovieRatingDto userMovieRatingDto) {
         UserMovieLabelDto userMovieLabelDto = mapper.map(userMovieRatingDto, UserMovieLabelDto.class);
         JSONObject jsonObject = new JSONObject();
-      
+
         jsonObject.put("userId", userMovieLabelDto.getUserId());
         jsonObject.put("movieId", userMovieLabelDto.getMovieId());
         jsonObject.put("label", userMovieLabelDto.getLabel());
@@ -256,8 +258,8 @@ public class MovieService {
         }
 
         Map<String, Object> movieList = new HashMap<>();
-        movieList.put("count", count);
-        movieList.put("movies", moviesToReturn);
+        movieList.put(COUNT, count);
+        movieList.put(MOVIES, moviesToReturn);
 
         return movieList;
     }
