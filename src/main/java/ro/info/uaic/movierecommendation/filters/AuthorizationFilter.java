@@ -40,6 +40,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
         UsernamePasswordAuthenticationToken authentication = getAuthentication(req);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        res.addHeader("Access-Control-Allow-Origin", "*");
         chain.doFilter(req, res);
     }
 

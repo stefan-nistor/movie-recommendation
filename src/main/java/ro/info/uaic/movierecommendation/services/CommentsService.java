@@ -90,7 +90,7 @@ public class CommentsService {
             throw new MovieNotFoundException(Movie.class, "id");
         }
 
-        List<Comment> comments = commentRepository.findByMovie(movie.get());
+        List<Comment> comments = commentRepository.findByMovieOrderByDateDesc(movie.get());
         return comments.stream()
                 .map(comment -> new CommentDTO(comment.getId(), comment.getMovie().getId(),
                         comment.getUser().getId(), mapper.map(comment.getUser(), UserObj.class),
@@ -108,7 +108,7 @@ public class CommentsService {
             throw new UserNotFoundException("User not found for this id.");
         }
 
-        List<Comment> comments = commentRepository.findByUserAndMovie(user.get(), movie.get());
+        List<Comment> comments = commentRepository.findByUserAndMovieOrderByDateDesc(user.get(), movie.get());
         return comments.stream()
                 .map(comment -> new CommentDTO(comment.getId(), comment.getMovie().getId(),
                         comment.getUser().getId(), mapper.map(comment.getUser(), UserObj.class),
