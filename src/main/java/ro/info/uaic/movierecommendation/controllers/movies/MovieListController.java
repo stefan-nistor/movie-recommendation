@@ -23,12 +23,10 @@ public class MovieListController {
     @Autowired
     private MovieService movieService;
 
-
     @GetMapping
     public ResponseEntity<List<MovieListDTO>> getMovieLists() {
         return ResponseEntity.ok().body(movieListService.findAll());
     }
-
 
     @GetMapping("/names")
     public ResponseEntity<MovieListDTO> getMovieListByName(@RequestParam("name") String name) {
@@ -37,7 +35,7 @@ public class MovieListController {
 
     @PostMapping("/add")
     public ResponseEntity<MovieListDTO> addMovieToList(@RequestParam("userId") Long userId,
-                                                       @RequestParam("lname") String movieListName,
+                                                       @RequestParam("listName") String movieListName,
                                                        @RequestParam("movieId") Long movieId) throws UserNotFoundException {
         return ResponseEntity.ok().body(
                 movieListService.addMovieToList(movieService.findById(movieId),
@@ -46,7 +44,7 @@ public class MovieListController {
 
     @DeleteMapping("/remove")
     public ResponseEntity<MovieListDTO> removeMovieFromList(@RequestParam("userId") Long user_id,
-                                                            @RequestParam("lname") String movieListName,
+                                                            @RequestParam("listName") String movieListName,
                                                             @RequestParam("movieId") Long movieId) throws UserNotFoundException {
         return ResponseEntity.ok().body(
                 movieListService.removeMovieToList(movieService.findById(movieId),

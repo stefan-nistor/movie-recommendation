@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.info.uaic.movierecommendation.dtoresponses.CommentDTO;
 import ro.info.uaic.movierecommendation.entites.Comment;
-import ro.info.uaic.movierecommendation.entites.UserEntity;
 import ro.info.uaic.movierecommendation.exceptions.MovieNotFoundException;
 import ro.info.uaic.movierecommendation.exceptions.UserException;
 import ro.info.uaic.movierecommendation.models.movies.Movie;

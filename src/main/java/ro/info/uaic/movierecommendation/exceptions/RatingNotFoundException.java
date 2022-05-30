@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-public class RatingNotFoundException extends Throwable {
+public class RatingNotFoundException extends RuntimeException {
 
     public RatingNotFoundException(Class nameClass, String... searchParamsMap) {
         super(RatingNotFoundException.generateMessage(nameClass.getSimpleName(), toMap(String.class, String.class,

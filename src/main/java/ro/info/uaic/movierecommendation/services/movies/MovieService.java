@@ -14,6 +14,7 @@ import ro.info.uaic.movierecommendation.dtoresponses.UserMovieLabelDto;
 import ro.info.uaic.movierecommendation.dtoresponses.UserMovieRatingDto;
 import ro.info.uaic.movierecommendation.dtoresponses.movies.MovieDto;
 import ro.info.uaic.movierecommendation.exceptions.MovieNotFoundException;
+import ro.info.uaic.movierecommendation.exceptions.RatingNotFoundException;
 import ro.info.uaic.movierecommendation.models.movies.Movie;
 import ro.info.uaic.movierecommendation.models.movies.MovieType;
 import ro.info.uaic.movierecommendation.models.movies.Type;
@@ -73,7 +74,7 @@ public class MovieService {
         return movieDtoList;
     }
 
-    public MovieDto findByName(String name, Pageable paging) throws MovieNotFoundException {
+    public MovieDto findByName(String name) throws MovieNotFoundException {
 
         Optional<Movie> movie = movieRepo.findByName(name);
 
@@ -211,7 +212,7 @@ public class MovieService {
 
         JSONObject resultJson = restTemplate.postForObject(URL, request, JSONObject.class);
         if (resultJson == null) {
-            throw new RuntimeException("No result");
+            throw new RatingNotFoundException(Movie.class, "No result");
         }
 
         return (Boolean) resultJson.get("predictionLabel");
@@ -233,7 +234,7 @@ public class MovieService {
         Object[] resultJson = restTemplate.postForObject(URL, request, Object[].class);
 
         if (resultJson == null) {
-            throw new RuntimeException("No result");
+            throw new RatingNotFoundException(Movie.class, "No result");
         }
 
         for (Object object : resultJson) {
