@@ -47,7 +47,8 @@ public class MovieService {
     public Map<String, Object> findAll(Pageable paging) throws MovieNotFoundException {
 
         List<MovieDto> movieDtoList = movieRepo.findAll(paging).getContent().stream()
-                .filter(movie -> !movie.isDeleted()).map(movie -> modelMapper.map(movie, MovieDto.class))
+                .filter(movie -> !movie.isDeleted() && !(movie.getDescription() == null))
+                .map(movie -> modelMapper.map(movie, MovieDto.class))
                 .collect(Collectors.toList());
 
         if (movieDtoList.isEmpty()) {
@@ -85,8 +86,8 @@ public class MovieService {
 
     public Map<String, Object> findByType(List<Type> type, Pageable paging) {
         List<MovieDto> movieDtoList = movieRepo.findByTypeIn(typeRepo.findByTypeIn(type), paging)
-                .getContent().stream().filter(movie -> !movie.isDeleted())
-                .map(movie -> modelMapper.map(movie, MovieDto.class)).toList();
+                .getContent().stream().filter(movie -> !movie.isDeleted() && !(movie.getDescription() == null))
+                .map(movie -> modelMapper.map(movie, MovieDto.class)).collect(Collectors.toList());
 
         List<MovieType> movieTypes = new ArrayList<>();
         type.forEach(t -> movieTypes.add(typeRepo.findByType(t)));
@@ -126,7 +127,7 @@ public class MovieService {
 
         List<MovieDto> movieDtoList = movieRepo.findByActorsIn(actorRepo.findByNameIn(actorName), paging)
                 .getContent().stream().filter(movie -> !movie.isDeleted())
-                .map(movie -> modelMapper.map(movie, MovieDto.class)).toList();
+                .map(movie -> modelMapper.map(movie, MovieDto.class)).collect(Collectors.toList());
 
         if (movieDtoList.isEmpty()) {
             throw new MovieNotFoundException(Movie.class, "actor/actors", actorName.toString());
@@ -218,7 +219,7 @@ public class MovieService {
 
     public Map<String, Object> getPredictions(Integer noOfPredictions, List<UserMovieRatingDto> userMovieRatingDtoList) {
         List<UserMovieLabelDto> userMovieLabelList = userMovieRatingDtoList.stream()
-                .map(rating -> mapper.map(rating, UserMovieLabelDto.class)).toList();
+                .map(rating -> mapper.map(rating, UserMovieLabelDto.class)).collect(Collectors.toList());
         JSONArray jsonArray = new JSONArray(userMovieLabelList);
         List<MovieDto> moviesToReturn = new ArrayList<>();
 
