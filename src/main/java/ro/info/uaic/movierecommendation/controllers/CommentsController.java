@@ -37,7 +37,7 @@ public class CommentsController {
     private ModelMapper mapper;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> postComment(@RequestBody CommentDTO newComment) throws UserException {
+    public ResponseEntity<CommentDTO> postComment(@RequestBody CommentDTO newComment) throws UserException {
         CommentDTO insertedComment = commentsService.saveNewComment(newComment);
         if (insertedComment == null) {
             return new ResponseEntity<>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
@@ -61,7 +61,7 @@ public class CommentsController {
 
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<?> deleteById(@PathVariable Long commentId) {
+    public ResponseEntity<Void> deleteById(@PathVariable Long commentId) {
         Optional<Comment> commentOptional = commentsService.getCommentById(commentId);
 
         if (commentOptional.isEmpty()) {
@@ -84,9 +84,9 @@ public class CommentsController {
 
     @GetMapping("/ids")
     public ResponseEntity<List<CommentDTO>> getCommentsByMovieIdAndUserId(@RequestParam("movieId") Long movieId,
-                                                                       @RequestParam("userId") Long userId) {
+                                                                          @RequestParam("userId") Long userId) {
         return new ResponseEntity<>(commentsService.getCommentsByMovieIdAndUserId(movieId, userId),
-                                    new HttpHeaders(), HttpStatus.OK);
+                new HttpHeaders(), HttpStatus.OK);
 
     }
 }

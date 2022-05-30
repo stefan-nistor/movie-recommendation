@@ -20,7 +20,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class MovieListService {
-
+    static final String USER_NOT_FOUND_FOR_NAME = "User not found for name.";
+    static final String MOVIELIST_NAME = "MovieList Name";
     @Autowired
     private ModelMapper modelMapper;
 
@@ -44,7 +45,7 @@ public class MovieListService {
 
         return movieListDTOList;
     }
-
+  
     public MovieListDTO findByName(String name) {
         MovieListDTO movieListDTO = modelMapper.map(listRepo.findByName(name), MovieListDTO.class);
         if (movieListDTO == null) {
@@ -64,7 +65,7 @@ public class MovieListService {
         }
         Optional<UserEntity> user = userRepo.findByUsername(movieListDTO.getUser().getUsername());
         if (user.isEmpty()) {
-            throw new UserNotFoundException("User not found for name.");
+            throw new UserNotFoundException(USER_NOT_FOUND_FOR_NAME);
         }
 
         if (listRepo.findByUser(user.get()).size() >= 1) {
@@ -74,6 +75,7 @@ public class MovieListService {
         if (listRepo.findByUserAndName(user.get(), movieListDTO.getName()).isEmpty()) {
             throw new MovieListNotFoundException(MovieList.class, "doesn't exist this list for the user");
         }
+      
         MovieList movieList = modelMapper.map(listRepo.findByUserAndName(user.get(), movieListDTO.getName()),
                 MovieList.class);
         Movie movie = modelMapper
@@ -81,7 +83,7 @@ public class MovieListService {
                         .getContent().get(0), Movie.class);
         if (movieList.getMovies().contains(movie)) {
             throw new MovieAlreadyInListException(MovieList.class, "Movie Name", movie.getName(),
-                    "MovieList Name", movieList.getName());
+                    MOVIELIST_NAME, movieList.getName());
         }
 
         movieList.getMovies().add(movie);
@@ -94,7 +96,7 @@ public class MovieListService {
     public MovieListDTO removeMovieToList(MovieDto movieDTO, MovieListDTO movieListDTO) {
         Optional<UserEntity> user = userRepo.findByUsername(movieListDTO.getUser().getUsername());
         if (user.isEmpty()) {
-            throw new UserNotFoundException("User not found for name.");
+            throw new UserNotFoundException(USER_NOT_FOUND_FOR_NAME);
         }
 
         MovieList movieList = modelMapper.map(listRepo.findByUserAndName(user.get(), movieListDTO.getName()),
@@ -104,7 +106,7 @@ public class MovieListService {
                         .getContent().get(0), Movie.class);
         if (!movieList.getMovies().contains(movie)) {
             throw new MovieNotInListException(MovieList.class, "Movie Name", movie.getName(),
-                    "MovieList Name", movieList.getName());
+                    MOVIELIST_NAME, movieList.getName());
         }
         movieList.getMovies().remove(movie);
         MovieListDTO movieListDTOResult = modelMapper
@@ -120,7 +122,7 @@ public class MovieListService {
             throw new UserNotFoundException("No user for this id");
         }
         if (listRepo.findByName(movieListName).isPresent()) {
-            throw new MovieListAlreadyExistsException(MovieList.class, "MovieList Name", movieListName);
+            throw new MovieListAlreadyExistsException(MovieList.class, MOVIELIST_NAME, movieListName);
         }
         MovieList movieList = new MovieList();
         movieList.setName(movieListName);
@@ -138,7 +140,7 @@ public class MovieListService {
     public void delete(MovieListDTO movieListDTO) {
         Optional<UserEntity> user = userRepo.findByUsername(movieListDTO.getUser().getUsername());
         if (user.isEmpty()) {
-            throw new UserNotFoundException("User not found for name.");
+            throw new UserNotFoundException(USER_NOT_FOUND_FOR_NAME);
         }
 
         Optional<MovieList> movieList = listRepo.findByUserAndName(user.get(), movieListDTO.getName());
@@ -151,7 +153,7 @@ public class MovieListService {
     public List<MovieListDTO> findUserLists(Long userId) {
         Optional<UserEntity> user = userRepo.findById(userId);
         if (user.isEmpty()) {
-            throw new UserNotFoundException("User not found for name.");
+            throw new UserNotFoundException(USER_NOT_FOUND_FOR_NAME);
         }
 
         return listRepo.findByUser(user.get()).stream()

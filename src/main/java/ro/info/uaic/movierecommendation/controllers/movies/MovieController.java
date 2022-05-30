@@ -59,11 +59,11 @@ public class MovieController {
 
 
     @GetMapping("/names")
+
     public ResponseEntity<MovieDto> getMovieByName(@RequestParam("name") String name)
             throws MovieNotFoundException {
 
         return new ResponseEntity(service.findByName(name), HttpStatus.OK);
-
     }
 
     @GetMapping("/types")
@@ -73,7 +73,7 @@ public class MovieController {
                                                               @RequestParam Optional<String> sortBy)
             throws MovieNotFoundException {
 
-        return new ResponseEntity(service.findByType(valuesType, PageRequest.of(page.orElse(0),
+        return new ResponseEntity<>(service.findByType(valuesType, PageRequest.of(page.orElse(0),
                 size.orElse(5), Sort.Direction.ASC, sortBy.orElse("id"))), HttpStatus.OK);
 
     }
@@ -85,13 +85,13 @@ public class MovieController {
                                                           @RequestParam Optional<String> sortBy)
             throws MovieNotFoundException {
 
-        return new ResponseEntity(service.findByActor(valuesName, PageRequest.of(page.orElse(0),
+        return new ResponseEntity<>(service.findByActor(valuesName, PageRequest.of(page.orElse(0),
                 size.orElse(5), Sort.Direction.ASC, sortBy.orElse("id"))), HttpStatus.OK);
 
     }
 
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> postMovie(@RequestBody MovieDto newMovie) {
+    public ResponseEntity<MovieDto> postMovie(@RequestBody MovieDto newMovie) {
 
         MovieDto insertedMovie = service.createMovie(newMovie);
         if (insertedMovie == null) {
@@ -102,7 +102,7 @@ public class MovieController {
     }
 
     @DeleteMapping("/{movieId}")
-    public ResponseEntity<?> deleteById(@PathVariable Long movieId) {
+    public ResponseEntity<Void> deleteById(@PathVariable Long movieId) {
         if (!service.deleteMovie(movieId)) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

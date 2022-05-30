@@ -24,7 +24,7 @@ public class MovieListController {
     private MovieService movieService;
 
     @GetMapping
-    public ResponseEntity<List<MovieListDTO>> getMovieLists()  {
+    public ResponseEntity<List<MovieListDTO>> getMovieLists() {
         return ResponseEntity.ok().body(movieListService.findAll());
     }
 
@@ -39,7 +39,7 @@ public class MovieListController {
                                                        @RequestParam("movieId") Long movieId) throws UserNotFoundException {
         return ResponseEntity.ok().body(
                 movieListService.addMovieToList(movieService.findById(movieId),
-                        movieListService.findListOfUser(userId,movieListName)));
+                        movieListService.findListOfUser(userId, movieListName)));
     }
 
     @DeleteMapping("/remove")
@@ -48,13 +48,13 @@ public class MovieListController {
                                                             @RequestParam("movieId") Long movieId) throws UserNotFoundException {
         return ResponseEntity.ok().body(
                 movieListService.removeMovieToList(movieService.findById(movieId),
-                        movieListService.findListOfUser(user_id,movieListName)));
+                        movieListService.findListOfUser(user_id, movieListName)));
     }
 
     @PostMapping
-    public ResponseEntity<?> createList( @RequestParam("userId") Long userId,
-                                         @RequestParam("lname") String movieListName) throws UserNotFoundException {
-        MovieListDTO insertedMovieList = movieListService.create(movieListName,userId);
+    public ResponseEntity<MovieListDTO> createList(@RequestParam("userId") Long userId,
+                                                   @RequestParam("lname") String movieListName) throws UserNotFoundException {
+        MovieListDTO insertedMovieList = movieListService.create(movieListName, userId);
         if (insertedMovieList == null) {
             return new ResponseEntity<>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
         } else {
@@ -63,9 +63,9 @@ public class MovieListController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteList(@RequestParam("userId") Long userId,
-                                        @RequestParam("lname") String movieListName) throws UserNotFoundException {
-        MovieListDTO deletedMovieList = movieListService.findListOfUser(userId,movieListName);
+    public ResponseEntity<Void> deleteList(@RequestParam("userId") Long userId,
+                                           @RequestParam("lname") String movieListName) throws UserNotFoundException {
+        MovieListDTO deletedMovieList = movieListService.findListOfUser(userId, movieListName);
         if (deletedMovieList == null) {
             return new ResponseEntity<>(null, new HttpHeaders(), HttpStatus.NOT_FOUND);
         } else {
@@ -75,10 +75,10 @@ public class MovieListController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<List<MovieListDTO>> getUserLists(@RequestParam("userId") Long userId){
+    public ResponseEntity<List<MovieListDTO>> getUserLists(@RequestParam("userId") Long userId) {
 
-        List<MovieListDTO> userLists=movieListService.findUserLists(userId);
-        if(userLists == null){
+        List<MovieListDTO> userLists = movieListService.findUserLists(userId);
+        if (userLists == null) {
             return new ResponseEntity<>(null, new HttpHeaders(), HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok().body(userLists);
@@ -88,8 +88,8 @@ public class MovieListController {
     public ResponseEntity<MovieListDTO> getMoviesFromList(@RequestParam("userId") Long userId,
                                                           @RequestParam("lname") String movieListName)
             throws UserNotFoundException {
-        MovieListDTO movieListDTO=movieListService.findListOfUser(userId,movieListName);
-        if(movieListDTO==null){
+        MovieListDTO movieListDTO = movieListService.findListOfUser(userId, movieListName);
+        if (movieListDTO == null) {
             return new ResponseEntity<>(null, new HttpHeaders(), HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok().body(movieListDTO);

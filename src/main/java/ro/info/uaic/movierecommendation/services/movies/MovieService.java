@@ -27,6 +27,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class MovieService {
+    static final String COUNT = "count";
+    static final String MOVIES = "movies";
 
     @Autowired
     private ModelMapper modelMapper;
@@ -46,7 +48,8 @@ public class MovieService {
     public Map<String, Object> findAll(Pageable paging) throws MovieNotFoundException {
 
         List<MovieDto> movieDtoList = movieRepo.findAll(paging).getContent().stream()
-                .filter(movie -> !movie.isDeleted()).map(movie -> modelMapper.map(movie, MovieDto.class))
+                .filter(movie -> !movie.isDeleted() && !(movie.getDescription() == null))
+                .map(movie -> modelMapper.map(movie, MovieDto.class))
                 .collect(Collectors.toList());
 
         if (movieDtoList.isEmpty()) {
@@ -54,8 +57,8 @@ public class MovieService {
         }
 
         Map<String, Object> movieList = new HashMap<>();
-        movieList.put("count", movieRepo.countByIsDeleted(false));
-        movieList.put("movies", movieDtoList);
+        movieList.put(COUNT, movieRepo.countByIsDeleted(false));
+        movieList.put(MOVIES, movieDtoList);
         return movieList;
     }
 
@@ -84,13 +87,13 @@ public class MovieService {
 
     public Map<String, Object> findByType(List<Type> type, Pageable paging) {
         List<MovieDto> movieDtoList = movieRepo.findByTypeIn(typeRepo.findByTypeIn(type), paging)
-                .getContent().stream().filter(movie -> !movie.isDeleted())
-                .map(movie -> modelMapper.map(movie, MovieDto.class)).toList();
+                .getContent().stream().filter(movie -> !movie.isDeleted() && !(movie.getDescription() == null))
+                .map(movie -> modelMapper.map(movie, MovieDto.class)).collect(Collectors.toList());
 
         List<MovieType> movieTypes = new ArrayList<>();
         type.forEach(t -> movieTypes.add(typeRepo.findByType(t)));
 
-        List<MovieDto> movieDtoListAll= new ArrayList<>();
+        List<MovieDto> movieDtoListAll = new ArrayList<>();
         movieDtoList.forEach(movieDto -> {
             if (movieDto.getType().containsAll(movieTypes)) {
                 movieDtoListAll.add(movieDto);
@@ -115,8 +118,8 @@ public class MovieService {
         }
 
         Map<String, Object> movieList = new HashMap<>();
-        movieList.put("count", count);
-        movieList.put("movies", movieDtoList);
+        movieList.put(COUNT, count);
+        movieList.put(MOVIES, movieDtoList);
 
         return movieList;
     }
@@ -125,7 +128,7 @@ public class MovieService {
 
         List<MovieDto> movieDtoList = movieRepo.findByActorsIn(actorRepo.findByNameIn(actorName), paging)
                 .getContent().stream().filter(movie -> !movie.isDeleted())
-                .map(movie -> modelMapper.map(movie, MovieDto.class)).toList();
+                .map(movie -> modelMapper.map(movie, MovieDto.class)).collect(Collectors.toList());
 
         if (movieDtoList.isEmpty()) {
             throw new MovieNotFoundException(Movie.class, "actor/actors", actorName.toString());
@@ -195,7 +198,7 @@ public class MovieService {
     public Boolean getSinglePrediction(UserMovieRatingDto userMovieRatingDto) {
         UserMovieLabelDto userMovieLabelDto = mapper.map(userMovieRatingDto, UserMovieLabelDto.class);
         JSONObject jsonObject = new JSONObject();
-      
+
         jsonObject.put("userId", userMovieLabelDto.getUserId());
         jsonObject.put("movieId", userMovieLabelDto.getMovieId());
         jsonObject.put("label", userMovieLabelDto.getLabel());
@@ -217,7 +220,7 @@ public class MovieService {
 
     public Map<String, Object> getPredictions(Integer noOfPredictions, List<UserMovieRatingDto> userMovieRatingDtoList) {
         List<UserMovieLabelDto> userMovieLabelList = userMovieRatingDtoList.stream()
-                .map(rating -> mapper.map(rating, UserMovieLabelDto.class)).toList();
+                .map(rating -> mapper.map(rating, UserMovieLabelDto.class)).collect(Collectors.toList());
         JSONArray jsonArray = new JSONArray(userMovieLabelList);
         List<MovieDto> moviesToReturn = new ArrayList<>();
 
@@ -257,8 +260,8 @@ public class MovieService {
         }
 
         Map<String, Object> movieList = new HashMap<>();
-        movieList.put("count", count);
-        movieList.put("movies", moviesToReturn);
+        movieList.put(COUNT, count);
+        movieList.put(MOVIES, moviesToReturn);
 
         return movieList;
     }

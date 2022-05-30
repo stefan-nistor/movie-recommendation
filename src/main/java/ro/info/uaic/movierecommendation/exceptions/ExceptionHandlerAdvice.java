@@ -13,28 +13,30 @@ import java.util.Map;
 
 @ControllerAdvice
 public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
+    final static String TIMESTAMP = "Timestamp";
+    final static String MESSAGE = "Message";
 
     @ExceptionHandler(UserException.class)
     public ResponseEntity<Object> userAlreadyExists(UserException userException) {
         Map<String, Object> result = new LinkedHashMap<>();
-        result.put("Timestamp", LocalDateTime.now());
-        result.put("Message", userException.getMessage());
+        result.put(TIMESTAMP, LocalDateTime.now());
+        result.put(MESSAGE, userException.getMessage());
         return new ResponseEntity<>(JsonUtil.objectToJsonString(result), HttpStatus.NOT_ACCEPTABLE);
     }
 
     @ExceptionHandler(EmailFormatException.class)
     public ResponseEntity<Object> invalidEmailFormat(EmailFormatException emailFormatException) {
         Map<String, Object> result = new LinkedHashMap<>();
-        result.put("Timestamp", LocalDateTime.now());
-        result.put("Message", emailFormatException.getMessage());
+        result.put(TIMESTAMP, LocalDateTime.now());
+        result.put(MESSAGE, emailFormatException.getMessage());
         return new ResponseEntity<>(JsonUtil.objectToJsonString(result), HttpStatus.NOT_ACCEPTABLE);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Object> userNotFound(UserNotFoundException userNotFoundException) {
         Map<String, Object> result = new LinkedHashMap<>();
-        result.put("Timestamp", LocalDateTime.now());
-        result.put("Message", userNotFoundException.getMessage());
+        result.put(TIMESTAMP, LocalDateTime.now());
+        result.put(MESSAGE, userNotFoundException.getMessage());
         return new ResponseEntity<>(JsonUtil.objectToJsonString(result), HttpStatus.NOT_FOUND);
     }
 
