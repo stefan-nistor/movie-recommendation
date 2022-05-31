@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment,Long> {
-    List<Comment> findByUser(UserEntity user);
-    List<Comment> findByMovie(Movie movie);
-    List<Comment> findByUserAndMovie(UserEntity user, Movie movie);
+    List<Comment> findByUserOrderByDateDesc(UserEntity user);
+    List<Comment> findByMovieOrderByDateDesc(Movie movie);
+    List<Comment> findByUserAndMovieOrderByDateDesc(UserEntity user, Movie movie);
 }

@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.stream.IntStream;
 
 public class MovieAlreadyInListException extends RuntimeException {
-    public MovieAlreadyInListException(Class nameClass, String... searchParamsMap) {
+    public MovieAlreadyInListException(Class<?> nameClass, String... searchParamsMap) {
         super(MovieAlreadyInListException.generateMessage(nameClass.getSimpleName(), toMap(String.class, String.class, searchParamsMap)));
     }
 

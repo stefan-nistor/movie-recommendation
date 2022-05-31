@@ -1,8 +1,10 @@
 package ro.info.uaic.movierecommendation.dtoresponses.movies;
 
-import com.sun.istack.NotNull;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
