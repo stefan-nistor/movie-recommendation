@@ -27,13 +27,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         var userEntityOptional = userRepo.findByUsername(username);
-
+        if(username.contains("@")){
+            userEntityOptional = userRepo.findByEmail(username);
+        }
         if (userEntityOptional.isEmpty()) {
             log.error("User not found in database");
             throw new UsernameNotFoundException("User not found in database.");
         }
         UserEntity userEntity = userEntityOptional.get();
         log.info("User found in the database");
+        if(username.contains("@")){
+            return new User(userEntity.getEmail(), userEntity.getPassword(), emptyList());
+        }
         return new User(userEntity.getUsername(), userEntity.getPassword(), emptyList());
     }
 
