@@ -57,7 +57,7 @@ public class RatingController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping
+    @PostMapping("/update")
     public ResponseEntity<Void> changeRating(@RequestBody UserMovieRatingDto userMovieRatingDto) {
         ratingService.updateRating(userMovieRatingDto);
 

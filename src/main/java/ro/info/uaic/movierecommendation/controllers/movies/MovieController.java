@@ -115,7 +115,7 @@ public class MovieController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping(value = "/{movieId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/update/{movieId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MovieDto> updateMovie(@PathVariable Long movieId,
                                                 @RequestBody MovieDto updatedMovie) throws MovieNotFoundException {
         return new ResponseEntity<>(service.updateMovie(movieId, updatedMovie),
