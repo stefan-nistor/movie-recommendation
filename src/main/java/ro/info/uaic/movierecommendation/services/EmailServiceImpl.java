@@ -25,25 +25,6 @@ public class EmailServiceImpl implements EmailService {
         mail.setText(message);
         javaMailSender.send(mail);
 
-//        MimeMessage msg = new MimeMessage(session);
-//        Multipart multipart = new MimeMultipart();
-//        BodyPart messageBodyPart = new MimeBodyPart();
-//
-//        try {
-//            msg.setFrom(new InternetAddress(noReply));
-//            msg.setRecipients(Message.RecipientType.TO,
-//                    InternetAddress.parse(recipientsList == null ? mailRecipients : String.join(",", recipientsList)));
-//            messageBodyPart.setContent(message, "text/html; charset=utf-8");
-//            multipart.addBodyPart(messageBodyPart);
-//
-//            msg.setContent(multipart);
-//            Transport.send(msg);
-//            log.info("Email has been sent");
-//            return true;
-//        } catch (MessagingException e) {
-//            log.error("Error at sending email: {}", e.getMessage());
-//            return false;
-//        }
     }
 
 }

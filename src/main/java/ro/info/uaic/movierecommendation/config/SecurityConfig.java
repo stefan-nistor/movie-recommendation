@@ -54,17 +54,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/api/v1/users").permitAll();
         http.authorizeRequests().antMatchers("/oauth2/**", "/auth/**").permitAll();
 
-//
-//        http.authorizeRequests().anyRequest().authenticated()
-//                        .and().oauth2Login()
-//                        .authorizationEndpoint().baseUri("/oauth2/authorize")
-//                        .and().successHandler(authenticationSuccessHandler());
-
         http.authorizeRequests().anyRequest().authenticated()
                 .and()
                 .addFilter(new AuthenticationFilter(authenticationManager()))
                 .addFilterBefore(customAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
-                // this disables session creation on Spring Security
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
@@ -77,10 +70,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-
         CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
         source.registerCorsConfiguration("/**", corsConfiguration);
-
         return source;
     }
 
