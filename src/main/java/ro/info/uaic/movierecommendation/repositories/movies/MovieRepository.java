@@ -15,6 +15,8 @@ import java.util.Optional;
 public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     Optional<Movie> findByName(String name);
+    Page<Movie> findByNameContainingIgnoreCase(String name, Pageable paging);
+    List<Movie> findByNameContainingIgnoreCase(String name);
     Page<Movie> findByName(String name, Pageable paging);
     Page<Movie> findByTypeIn(List<MovieType> type, Pageable paging);
     Page<Movie> findByActorsIn(List<Actor> actor, Pageable paging);
