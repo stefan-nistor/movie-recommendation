@@ -20,9 +20,13 @@ public class GoogleAuthenticationSuccessHandler implements AuthenticationSuccess
 
     private final UserService userService;
 
+    private final RedirectStrategy redirectStrategy;
+
+    private final String REDIRECT_URI = "https://a6-movie-recommendation.netlify.app/";
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         userService.saveOauth2User((OAuth2User) authentication.getPrincipal());
-
+        redirectStrategy.sendRedirect(request, response, REDIRECT_URI);
     }
 }

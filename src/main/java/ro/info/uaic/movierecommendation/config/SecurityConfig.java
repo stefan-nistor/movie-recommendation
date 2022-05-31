@@ -11,6 +11,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.DefaultRedirectStrategy;
+import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -30,6 +32,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsServiceImpl userDetailsService;
     private final CustomAuthorizationFilter customAuthorizationFilter;
     private final UserService userService;
+
+    private final static String REDIRECT_URI = "https://a6-movie-recommendation.netlify.app/";
 
     @Autowired
     public SecurityConfig(UserDetailsServiceImpl userDetailsService, CustomAuthorizationFilter customAuthorizationFilter, UserService userService) {
@@ -55,10 +59,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/oauth2/**", "/auth/**").permitAll();
 
         http.authorizeRequests().anyRequest().authenticated()
-                .and()
-                .addFilter(new AuthenticationFilter(authenticationManager()))
-                .addFilterBefore(customAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .and().oauth2Login()
+                .authorizationEndpoint().baseUri("/oauth2/authorize")
+                .and().successHandler(authenticationSuccessHandler());
+
+        http.addFilter(new AuthenticationFilter(authenticationManager()));
+        http.addFilterBefore(customAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
+//        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
     @Override
@@ -81,7 +88,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    public RedirectStrategy redirectStrategy(){
+        return new DefaultRedirectStrategy();
+    }
+
+    @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
-        return new GoogleAuthenticationSuccessHandler(userService);
+        return new GoogleAuthenticationSuccessHandler(userService, redirectStrategy());
     }
 }
