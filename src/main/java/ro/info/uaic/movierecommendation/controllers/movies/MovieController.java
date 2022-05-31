@@ -61,7 +61,7 @@ public class MovieController {
 
 
     @GetMapping("/names")
-    public ResponseEntity<MovieDto> getMovieByName(@RequestParam("name") String name,
+    public ResponseEntity<Map<String, Object>> getMovieByName(@RequestParam("name") String name,
                                                    @RequestParam Optional<Integer> page,
                                                    @RequestParam Optional<Integer> size,
                                                    @RequestParam Optional<String> sortBy)
@@ -115,7 +115,7 @@ public class MovieController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping(value = "/{movieId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/update/{movieId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MovieDto> updateMovie(@PathVariable Long movieId,
                                                 @RequestBody MovieDto updatedMovie) throws MovieNotFoundException {
         return new ResponseEntity<>(service.updateMovie(movieId, updatedMovie),

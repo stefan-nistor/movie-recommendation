@@ -73,15 +73,29 @@ public class MovieService {
         return movieDtoList;
     }
 
-    public MovieDto findByName(String name, Pageable paging) throws MovieNotFoundException {
+    public Map<String, Object> findByName(String name, Pageable paging) throws MovieNotFoundException {
+        List<MovieDto> movieDtoList = movieRepo.findByNameContainingIgnoreCase(name, paging)
+                .getContent().stream().filter(movie -> !movie.isDeleted() && !(movie.getDescription() == null))
+                .map(movie -> modelMapper.map(movie, MovieDto.class)).collect(Collectors.toList());
 
-        Optional<Movie> movie = movieRepo.findByName(name);
-
-        if (movie.isEmpty() || movie.get().isDeleted()) {
-            throw new MovieNotFoundException(Movie.class, "name", name);
+        List<Movie> tempList = movieRepo.findByNameContainingIgnoreCase(name);
+        long count = 0L;
+        int i = 0;
+        while (i < tempList.size()) {
+            if (tempList.get(i).isDeleted() || tempList.get(i).getDescription() == null) {
+                tempList.remove(tempList.get(i));
+                i--;
+            } else {
+                count++;
+            }
+            i++;
         }
 
-        return mapper.map(movie, MovieDto.class);
+        Map<String, Object> movieList = new HashMap<>();
+        movieList.put(COUNT, count);
+        movieList.put(MOVIES, movieDtoList);
+
+        return movieList;
     }
 
     public Map<String, Object> findByType(List<Type> type, Pageable paging) {

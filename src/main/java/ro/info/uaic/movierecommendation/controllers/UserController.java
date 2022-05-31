@@ -44,7 +44,7 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getUserById(id));
     }
 
-    @PutMapping("/{id}")
+    @PostMapping("/update/{id}")
     public ResponseEntity<UserObj> updateUserForBody(@PathVariable Long id, @RequestBody UserDTO userDTO) {
         return new ResponseEntity<>(userService.updateUserForBody(id, userDTO), HttpStatus.RESET_CONTENT);
     }

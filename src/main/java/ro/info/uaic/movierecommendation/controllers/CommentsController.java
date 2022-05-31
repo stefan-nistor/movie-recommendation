@@ -48,7 +48,7 @@ public class CommentsController {
 
     }
 
-    @PutMapping(value = "/{commentId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/update/{commentId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CommentDTO> updateMovie(@PathVariable Long commentId, @RequestBody String newContent)
             throws MovieNotFoundException {
 

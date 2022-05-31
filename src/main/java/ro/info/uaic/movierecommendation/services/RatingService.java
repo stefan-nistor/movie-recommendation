@@ -64,11 +64,14 @@ public class RatingService {
         Optional<UserMovieRating> userMovieRating = ratingRepo.findByUserIdAndMovieId(
                 userId.toString(), movieId.toString());
 
+        UserMovieRating rating;
         if (userMovieRating.isEmpty()) {
-            throw new RatingNotFoundException(UserMovieRating.class, "movie/user_id");
+            rating = new UserMovieRating(0L, userId.toString(), movieId.toString(), false, 0);
+        } else {
+            rating = userMovieRating.get();
         }
 
-        return userMovieRating.get();
+        return rating;
     }
 
     public void createRating(UserMovieRatingDto userMovieRatingDto) {
