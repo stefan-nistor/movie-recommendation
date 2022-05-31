@@ -15,7 +15,9 @@ import ro.info.uaic.movierecommendation.entites.UserEntity;
 import ro.info.uaic.movierecommendation.exceptions.EmailFormatException;
 import ro.info.uaic.movierecommendation.exceptions.UserException;
 import ro.info.uaic.movierecommendation.exceptions.UserNotFoundException;
+import ro.info.uaic.movierecommendation.models.movies.MovieList;
 import ro.info.uaic.movierecommendation.repos.UserRepo;
+import ro.info.uaic.movierecommendation.repositories.movies.MovieListRepository;
 import ro.info.uaic.movierecommendation.util.Validator;
 
 import java.util.Base64;
@@ -32,14 +34,28 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private ModelMapper mapper;
 
+    @Autowired
+    private MovieListRepository listRepo;
+
     @Override
     public UserDTO saveNewUser(UserDTO user) {
         if (!Validator.validateEmailAddress(user.getEmail()))
             throw new EmailFormatException();
         var userFromDb = userRepo.findByUsername(user.getUsername());
-        if (userFromDb.isPresent())
+        if (userFromDb.isPresent()) {
             throw new UserException("There is already a user with this username in database.");
+        }
         userRepo.save(mapper.map(user, UserEntity.class));
+
+        // Add his movieLists
+        Optional<UserEntity> user1 = userRepo.findByUsername(user.getUsername());
+        if (user1.isPresent()) {
+            MovieList movieList = new MovieList();
+            movieList.setUser(user1.get());
+            movieList.setName("MyList");
+            listRepo.save(movieList);
+        }
+        
         return user;
     }
 
