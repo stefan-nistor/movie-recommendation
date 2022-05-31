@@ -26,7 +26,7 @@ public class UserMovieRating {
     @NotNull
     private Boolean label;
     @NotNull
-    @Min(1)
+    @Min(0)
     @Max(10)
     private Integer rating;
 }
