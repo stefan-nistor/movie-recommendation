@@ -12,6 +12,6 @@ public class CorsConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
-                .allowedOrigins("https://a6-movie-recommendation.netlify.app/**", "http://localhost:3002/**");
+                .allowedOrigins("https://a6-movie-recommendation.netlify.app", "http://localhost:3002");
     }
 }
