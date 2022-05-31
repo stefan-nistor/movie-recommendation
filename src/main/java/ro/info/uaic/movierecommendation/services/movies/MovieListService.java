@@ -71,10 +71,6 @@ public class MovieListService {
             throw new UserNotFoundException(USER_NOT_FOUND_FOR_NAME);
         }
 
-        if (listRepo.findByUser(user.get()).size() >= 1) {
-            return null;
-        }
-
         MovieList movieList = modelMapper.map(listRepo.findByUserAndName(user.get(), movieListDTO.getName()),
                 MovieList.class);
         Movie movie = modelMapper
