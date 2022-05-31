@@ -16,5 +16,4 @@ public interface UserService {
     UserObj getUserById(Long id);
     UserObj updateUserForBody(Long id, UserDTO userDTO);
     void deleteUser(Long id);
-//    UserDTO getPrincipalDetails();
 }

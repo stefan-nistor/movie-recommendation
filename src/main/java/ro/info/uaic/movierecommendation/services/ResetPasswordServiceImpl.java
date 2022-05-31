@@ -43,7 +43,7 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
         userEntity.setPasswordToken(token);
         userService.updateUser(mapper.map(userEntity, UserDTO.class));
 
-        String text = "To reset your password, click the link below:\nhttp://localhost:3001/IP-Movie-streaming-website/reset-pass?token=" + userEntity.getPasswordToken();
+        String text = "To reset your password, click the link below:\nhttps://a6-movie-recommendation.netlify.app/reset-pass?token=" + userEntity.getPasswordToken();
 
         emailService.sendEmail(user.get().getEmail(), text);
     }

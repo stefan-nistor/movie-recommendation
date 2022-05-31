@@ -31,15 +31,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsServiceImpl userDetailsService;
     private final CustomAuthorizationFilter customAuthorizationFilter;
-    private final UserService userService;
-
-    private final static String REDIRECT_URI = "https://a6-movie-recommendation.netlify.app/";
 
     @Autowired
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService, CustomAuthorizationFilter customAuthorizationFilter, UserService userService) {
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService, CustomAuthorizationFilter customAuthorizationFilter) {
         this.userDetailsService = userDetailsService;
         this.customAuthorizationFilter = customAuthorizationFilter;
-        this.userService = userService;
     }
 
     @Override
@@ -59,13 +55,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/oauth2/**", "/auth/**").permitAll();
 
         http.authorizeRequests().anyRequest().authenticated()
-                .and().oauth2Login()
-                .authorizationEndpoint().baseUri("/oauth2/authorize")
-                .and().successHandler(authenticationSuccessHandler());
-
-        http.addFilter(new AuthenticationFilter(authenticationManager()));
-        http.addFilterBefore(customAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
-//        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .and()
+                .addFilter(new AuthenticationFilter(authenticationManager()))
+                .addFilterBefore(customAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
     @Override
@@ -85,15 +78,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public RedirectStrategy redirectStrategy(){
-        return new DefaultRedirectStrategy();
-    }
-
-    @Bean
-    public AuthenticationSuccessHandler authenticationSuccessHandler() {
-        return new GoogleAuthenticationSuccessHandler(userService, redirectStrategy());
     }
 }
